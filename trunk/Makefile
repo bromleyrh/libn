@@ -5,12 +5,10 @@
 mach = $(shell uname -m)
 
 ifeq ($(mach), i686)
-wordsize := 32
+cppflags := -DI386
 else
-wordsize := 64
+cppflags := -DX86_64
 endif
-
-cppflags = -D__WORDSIZE=$(wordsize)
 
 all: overflow_test
 

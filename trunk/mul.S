@@ -12,6 +12,7 @@
     .globl      mulu32u32
     .globl      _mulu32u32
 
+#ifndef __APPLE__
     .type       muls64s64 STT_FUNC
     .type       _muls64s64 STT_FUNC
     .type       mulu64u64 STT_FUNC
@@ -22,9 +23,11 @@
     .type       mulu32u32 STT_FUNC
     .type       _mulu32u32 STT_FUNC
 
+#endif
+
     .text
 
-#if __WORDSIZE == 64
+#ifdef X86_64
 
 muls64s64:
 _muls64s64:
@@ -35,8 +38,11 @@ _muls64s64:
 out_s64s64:
     ret
 
+#ifndef __APPLE__
     .size       muls64s64, .-muls64s64
     .size       _muls64s64, .-_muls64s64
+
+#endif
 
 mulu64u64:
 _mulu64u64:
@@ -48,8 +54,11 @@ _mulu64u64:
 out_u64u64:
     ret
 
+#ifndef __APPLE__
     .size       mulu64u64, .-mulu64u64
     .size       _mulu64u64, .-_mulu64u64
+
+#endif
 
 muls32s32:
 _muls32s32:
@@ -60,8 +69,11 @@ _muls32s32:
 out_s32s32:
     ret
 
+#ifndef __APPLE__
     .size       muls32s32, .-muls32s32
     .size       _muls32s32, .-_muls32s32
+
+#endif
 
 mulu32u32:
 _mulu32u32:
@@ -73,10 +85,118 @@ _mulu32u32:
 out_u32u32:
     ret
 
+#ifndef __APPLE__
     .size       mulu32u32, .-mulu32u32
     .size       _mulu32u32, .-_mulu32u32
 
+#endif
+
 #else
+
+#
+# p = (a + b) * (c + d)
+# p = ac + (ad + bc) + bd
+# H1 = ad, H2 = bc, L = bd
+# p = (H1l + H2l) + Lh + Ll
+# p = (H1l + H2l + Lh) + Ll
+# p = Hl + Ll
+#
+
+muls64s64:
+_muls64s64:
+    movl        4(%esp), %edx       # a
+    movl        12(%esp), %ecx      # c
+    testl       %ecx, %ecx          # get sign of c
+    lahf
+    shrl        $8, %eax
+    testl       %edx, %edx          # get sign of a
+    lahf
+    pushl       %eax
+    movl        %edx, %eax
+    andl        $0x7fffffff, %ecx
+    jz          mul_ad_s64s64
+    andl        $0x7fffffff, %eax
+    jnz         overflow_s64s64
+    movl        8(%esp), %eax       # b
+    mull        %ecx
+    jo          overflow_s64s64
+    movl        16(%esp), %ecx      # d
+    jmp         mul_bd_s64s64
+mul_ad_s64s64:
+    movl        16(%esp), %ecx      # d
+    mull        %ecx
+    jo          overflow_s64s64
+mul_bd_s64s64:
+    pushl       %eax
+    movl        8(%esp), %eax       # b
+    mull        %ecx
+    movl        %eax, %ecx
+    popl        %eax
+    addl        %edx, %eax
+    jc          overflow_s64s64
+    testl       $0xf0000000, %eax
+    jnz         overflow_s64s64
+    popl        %edx
+    andl        $0x00007070, %edx   # determine sign of product
+    jnp         nosign_s64s64
+    orl         $0x70000000, %eax
+nosign_s64s64:
+    movl        28(%esp), %edx
+    movl        %eax, (%edx)
+    movl        32(%esp), %edx
+    movl        %ecx, (%edx)
+    ret
+overflow_s64s64:
+    movl        36(%esp), %edx
+    orl         $1, (%edx)
+    ret
+
+#ifndef __APPLE__
+    .size       muls64s64, .-muls64s64
+    .size       _muls64s64, .-_muls64s64
+
+#endif
+
+mulu64u64:
+_mulu64u64:
+    movl        4(%esp), %eax   # a
+    movl        12(%esp), %ecx  # c
+    testl       %ecx, %ecx
+    jz          mul_ad_u64u64
+    testl       %eax, %eax
+    jnz         overflow_u64u64
+    movl        8(%esp), %eax   # b
+    mull        %ecx
+    jo          overflow_u64u64
+    movl        16(%esp), %ecx  # d
+    jmp         mul_bd_u64u64
+mul_ad_u64u64:
+    movl        16(%esp), %ecx  # d
+    mull        %ecx
+    jo          overflow_u64u64
+mul_bd_u64u64:
+    pushl       %eax
+    movl        8(%esp), %eax   # b
+    mull        %ecx
+    movl        %eax, %ecx
+    popl        %eax
+    addl        %edx, %eax
+    jc          overflow_u64u64
+    movl        28(%esp), %edx
+    movl        %eax, (%edx)
+    movl        32(%esp), %edx
+    movl        %ecx, (%edx)
+    ret
+overflow_u64u64:
+    movl        36(%esp), %edx
+    orl         $1, (%edx)
+    ret
+
+#ifndef __APPLE__
+    .size       mulu64u64, .-mulu64u64
+    .size       _mulu64u64, .-_mulu64u64
+
+#endif
 
 muls32s32:
 _muls32s32:
@@ -89,8 +209,11 @@ _muls32s32:
 out_s32s32:
     ret
 
+#ifndef __APPLE__
     .size       muls32s32, .-muls32s32
     .size       _muls32s32, .-_muls32s32
+
+#endif
 
 mulu32u32:
 _mulu32u32:
@@ -103,8 +226,11 @@ _mulu32u32:
 out_u32u32:
     ret
 
+#ifndef __APPLE__
     .size       mulu32u32, .-mulu32u32
     .size       _mulu32u32, .-_mulu32u32
+
+#endif
 
 #endif
 

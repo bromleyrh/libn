@@ -12,6 +12,7 @@
     .globl      addu32u32
     .globl      _addu32u32
 
+#ifndef __APPLE__
     .type       adds64s64 STT_FUNC
     .type       _adds64s64 STT_FUNC
     .type       addu64u64 STT_FUNC
@@ -22,9 +23,11 @@
     .type       addu32u32 STT_FUNC
     .type       _addu32u32 STT_FUNC
 
+#endif
+
     .text
 
-#if __WORDSIZE == 64
+#ifdef X86_64
 
 adds64s64:
 _adds64s64:
@@ -35,8 +38,11 @@ _adds64s64:
 out_s64s64:
     ret
 
+#ifndef __APPLE__
     .size       adds64s64, .-adds64s64
     .size       _adds64s64, .-_adds64s64
+
+#endif
 
 addu64u64:
 _addu64u64:
@@ -47,8 +53,11 @@ _addu64u64:
 out_u64u64:
     ret
 
+#ifndef __APPLE__
     .size       addu64u64, .-addu64u64
     .size       _addu64u64, .-_addu64u64
+
+#endif
 
 adds32s32:
 _adds32s32:
@@ -59,8 +68,11 @@ _adds32s32:
 out_s32s32:
     ret
 
+#ifndef __APPLE__
     .size       adds32s32, .-adds32s32
     .size       _adds32s32, .-_adds32s32
+
+#endif
 
 addu32u32:
 _addu32u32:
@@ -71,8 +83,11 @@ _addu32u32:
 out_u32u32:
     ret
 
+#ifndef __APPLE__
     .size       addu32u32, .-addu32u32
     .size       _addu32u32, .-_addu32u32
+
+#endif
 
 #else
 
@@ -94,8 +109,11 @@ _adds64s64:
 out_s64s64:
     ret
 
+#ifndef __APPLE__
     .size       adds64s64, .-adds64s64
     .size       _adds64s64, .-_adds64s64
+
+#endif
 
 addu64u64:
 _addu64u64:
@@ -115,8 +133,11 @@ _addu64u64:
 out_u64u64:
     ret
 
+#ifndef __APPLE__
     .size       addu64u64, .-addu64u64
     .size       _addu64u64, .-_addu64u64
+
+#endif
 
 adds32s32:
 _adds32s32:
@@ -129,8 +150,11 @@ _adds32s32:
 out_s32s32:
     ret
 
+#ifndef __APPLE__
     .size       adds32s32, .-adds32s32
     .size       _adds32s32, .-_adds32s32
+
+#endif
 
 addu32u32:
 _addu32u32:
@@ -143,8 +167,11 @@ _addu32u32:
 out_u32u32:
     ret
 
+#ifndef __APPLE__
     .size       addu32u32, .-addu32u32
     .size       _addu32u32, .-_addu32u32
+
+#endif
 
 #endif
 
