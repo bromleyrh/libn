@@ -2,50 +2,32 @@
 # mul.S
 #
 
-    .globl      muls64s64
+    .include    "common.S"
+
+#ifdef X86_64
+    expfun      muls64s64
+    expfun      mulu64u64
+#else
     .globl      _muls64s64
-    .globl      mulu64u64
     .globl      _mulu64u64
-
-    .globl      muls32s32
-    .globl      _muls32s32
-    .globl      mulu32u32
-    .globl      _mulu32u32
-
-#ifndef __APPLE__
-    .type       muls64s64 STT_FUNC
-    .type       _muls64s64 STT_FUNC
-    .type       mulu64u64 STT_FUNC
-    .type       _mulu64u64 STT_FUNC
-
-    .type       muls32s32 STT_FUNC
-    .type       _muls32s32 STT_FUNC
-    .type       mulu32u32 STT_FUNC
-    .type       _mulu32u32 STT_FUNC
-
 #endif
+
+    expfun      muls32s32
+    expfun      mulu32u32
 
     .text
 
 #ifdef X86_64
-
-muls64s64:
-_muls64s64:
+    defun       muls64s64
     movq        %rdi, %rax
     imulq       %rsi, %rax
     jno         out_s64s64
     orl         $1, (%rdx)
 out_s64s64:
     ret
+    funsz       muls64s64
 
-#ifndef __APPLE__
-    .size       muls64s64, .-muls64s64
-    .size       _muls64s64, .-_muls64s64
-
-#endif
-
-mulu64u64:
-_mulu64u64:
+    defun       mulu64u64
     movq        %rdx, %rcx
     movq        %rdi, %rax
     mulq        %rsi
@@ -53,30 +35,18 @@ _mulu64u64:
     orl         $1, (%rcx)
 out_u64u64:
     ret
+    funsz       mulu64u64
 
-#ifndef __APPLE__
-    .size       mulu64u64, .-mulu64u64
-    .size       _mulu64u64, .-_mulu64u64
-
-#endif
-
-muls32s32:
-_muls32s32:
+    defun       muls32s32
     movl        %edi, %eax
     imull       %esi, %eax
     jno         out_s32s32
     orl         $1, (%rdx)
 out_s32s32:
     ret
+    funsz       muls32s32
 
-#ifndef __APPLE__
-    .size       muls32s32, .-muls32s32
-    .size       _muls32s32, .-_muls32s32
-
-#endif
-
-mulu32u32:
-_mulu32u32:
+    defun       mulu32u32
     movq        %rdx, %rcx
     movl        %edi, %eax
     mull        %esi
@@ -84,12 +54,7 @@ _mulu32u32:
     orl         $1, (%rcx)
 out_u32u32:
     ret
-
-#ifndef __APPLE__
-    .size       mulu32u32, .-mulu32u32
-    .size       _mulu32u32, .-_mulu32u32
-
-#endif
+    funsz       mulu32u32
 
 #else
 
@@ -102,8 +67,7 @@ out_u32u32:
 # p = Hl + Ll
 #
 
-muls64s64:
-_muls64s64:
+    defun       _muls64s64
     movl        4(%esp), %edx       # a
     movl        12(%esp), %ecx      # c
     testl       %ecx, %ecx          # get sign of c
@@ -151,14 +115,7 @@ overflow_s64s64:
     orl         $1, (%edx)
     ret
 
-#ifndef __APPLE__
-    .size       muls64s64, .-muls64s64
-    .size       _muls64s64, .-_muls64s64
-
-#endif
-
-mulu64u64:
-_mulu64u64:
+    defun       _mulu64u64
     movl        4(%esp), %eax   # a
     movl        12(%esp), %ecx  # c
     testl       %ecx, %ecx
@@ -192,14 +149,7 @@ overflow_u64u64:
     orl         $1, (%edx)
     ret
 
-#ifndef __APPLE__
-    .size       mulu64u64, .-mulu64u64
-    .size       _mulu64u64, .-_mulu64u64
-
-#endif
-
-muls32s32:
-_muls32s32:
+    defun       muls32s32
     movl        4(%esp), %eax
     movl        8(%esp), %ecx
     imull       %ecx, %eax
@@ -208,15 +158,9 @@ _muls32s32:
     orl         $1, (%edx)
 out_s32s32:
     ret
+    funsz       muls32s32
 
-#ifndef __APPLE__
-    .size       muls32s32, .-muls32s32
-    .size       _muls32s32, .-_muls32s32
-
-#endif
-
-mulu32u32:
-_mulu32u32:
+    defun       mulu32u32
     movl        4(%esp), %eax
     movl        8(%esp), %ecx
     mull        %ecx
@@ -225,12 +169,7 @@ _mulu32u32:
     orl         $1, (%ecx)
 out_u32u32:
     ret
-
-#ifndef __APPLE__
-    .size       mulu32u32, .-mulu32u32
-    .size       _mulu32u32, .-_mulu32u32
-
-#endif
+    funsz       mulu32u32
 
 #endif
 

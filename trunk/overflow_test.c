@@ -2,6 +2,8 @@
  * overflow_test.c
  */
 
+#include "arithmetic.h"
+
 #include <inttypes.h>
 #include <limits.h>
 #include <stdarg.h>
@@ -42,26 +44,6 @@ static void (*const test_fns[])(void) = {
 };
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
-
-/* 64-bit implementations */
-
-uint64_t addu64u64(uint64_t, uint64_t, int *);
-int64_t adds64s64(int64_t, int64_t, int *);
-
-uint32_t addu32u32(uint32_t, uint32_t, int *);
-int32_t adds32s32(int32_t, int32_t, int *);
-
-uint64_t subu64u64(uint64_t, uint64_t, int *);
-int64_t subs64s64(int64_t, int64_t, int *);
-
-uint32_t subu32u32(uint32_t, uint32_t, int *);
-int32_t subs32s32(int32_t, int32_t, int *);
-
-uint64_t mulu64u64(uint64_t, uint64_t, int *);
-int64_t muls64s64(int64_t, int64_t, int *);
-
-uint32_t mulu32u32(uint32_t, uint32_t, int *);
-int32_t muls32s32(int32_t, int32_t, int *);
 
 static void put_output(int, const char *, ...);
 

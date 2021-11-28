@@ -10,13 +10,18 @@ else
 cppflags := -DX86_64
 endif
 
+cflags = -Iinclude -Wall -Wextra
+
 all: overflow_test
 
-overflow_test: overflow_test.o add.o sub.o mul.o
+overflow_test: overflow_test.o arithmetic.o add.o sub.o mul.o
 	gcc -o $@ $^
 
 overflow_test.o: overflow_test.c
-	gcc -c -o $@ -Wall -Wextra $^
+	gcc -c $(cflags) -o $@ $^
+
+arithmetic.o: arithmetic.c
+	gcc $(cppflags) -c $(cflags) -o $@ $^
 
 add.o: add.S
 	gcc $(cppflags) -c -o $@ $^

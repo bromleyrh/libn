@@ -2,97 +2,60 @@
 # sub.S
 #
 
-    .globl      subs64s64
+    .include    "common.S"
+
+#ifdef X86_64
+    expfun      subs64s64
+    expfun      subu64u64
+#else
     .globl      _subs64s64
-    .globl      subu64u64
     .globl      _subu64u64
-
-    .globl      subs32s32
-    .globl      _subs32s32
-    .globl      subu32u32
-    .globl      _subu32u32
-
-#ifndef __APPLE__
-    .type       subs64s64 STT_FUNC
-    .type       _subs64s64 STT_FUNC
-    .type       subu64u64 STT_FUNC
-    .type       _subu64u64 STT_FUNC
-
-    .type       subs32s32 STT_FUNC
-    .type       _subs32s32 STT_FUNC
-    .type       subu32u32 STT_FUNC
-    .type       _subu32u32 STT_FUNC
-
 #endif
+
+    expfun      subs32s32
+    expfun      subu32u32
 
     .text
 
 #ifdef X86_64
-
-subs64s64:
-_subs64s64:
+    defun       subs64s64
     movq        %rdi, %rax
     subq        %rsi, %rax
     jno         out_s64s64
     orl         $1, (%rdx)
 out_s64s64:
     ret
+    funsz       subs64s64
 
-#ifndef __APPLE__
-    .size       subs64s64, .-subs64s64
-    .size       _subs64s64, .-_subs64s64
-
-#endif
-
-subu64u64:
-_subu64u64:
+    defun       subu64u64
     movq        %rdi, %rax
     subq        %rsi, %rax
     jnc         out_u64u64
     orl         $1, (%rdx)
 out_u64u64:
     ret
+    funsz       subu64u64
 
-#ifndef __APPLE__
-    .size       subu64u64, .-subu64u64
-    .size       _subu64u64, .-_subu64u64
-
-#endif
-
-subs32s32:
-_subs32s32:
+    defun       subs32s32
     movl        %edi, %eax
     subl        %esi, %eax
     jno         out_s32s32
     orl         $1, (%rdx)
 out_s32s32:
     ret
+    funsz       subs32s32
 
-#ifndef __APPLE__
-    .size       subs32s32, .-subs32s32
-    .size       _subs32s32, .-_subs32s32
-
-#endif
-
-subu32u32:
-_subu32u32:
+    defun       subu32u32
     movl        %edi, %eax
     subl        %esi, %eax
     jnc         out_u32u32
     orl         $1, (%rdx)
 out_u32u32:
     ret
-
-#ifndef __APPLE__
-    .size       subu32u32, .-subu32u32
-    .size       _subu32u32, .-_subu32u32
-
-#endif
+    funsz       subu32u32
 
 #else
-
-subs64s64:
-_subs64s64:
+    defun       _subs64s64
     movl        4(%esp), %eax
     movl        8(%esp), %ecx
     movl        20(%esp), %edx
@@ -109,14 +72,7 @@ _subs64s64:
 out_s64s64:
     ret
 
-#ifndef __APPLE__
-    .size       subs64s64, .-subs64s64
-    .size       _subs64s64, .-_subs64s64
-
-#endif
-
-subu64u64:
-_subu64u64:
+    defun       _subu64u64
     movl        4(%esp), %eax
     movl        8(%esp), %ecx
     movl        20(%esp), %edx
@@ -133,14 +89,7 @@ _subu64u64:
 out_u64u64:
     ret
 
-#ifndef __APPLE__
-    .size       subu64u64, .-subu64u64
-    .size       _subu64u64, .-_subu64u64
-
-#endif
-
-subs32s32:
-_subs32s32:
+    defun       subs32s32
     movl        4(%esp), %eax
     movl        8(%esp), %ecx
     subl        %ecx, %eax
@@ -149,15 +98,9 @@ _subs32s32:
     orl         $1, (%edx)
 out_s32s32:
     ret
+    funsz       subs32s32
 
-#ifndef __APPLE__
-    .size       subs32s32, .-subs32s32
-    .size       _subs32s32, .-_subs32s32
-
-#endif
-
-subu32u32:
-_subu32u32:
+    defun       subu32u32
     movl        4(%esp), %eax
     movl        8(%esp), %ecx
     subl        %ecx, %eax
@@ -166,12 +109,7 @@ _subu32u32:
     orl         $1, (%edx)
 out_u32u32:
     ret
-
-#ifndef __APPLE__
-    .size       subu32u32, .-subu32u32
-    .size       _subu32u32, .-_subu32u32
-
-#endif
+    funsz       subu32u32
 
 #endif
 
