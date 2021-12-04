@@ -70,6 +70,8 @@ test_addu64u64()
     int overflow;
     uint64_t res;
 
+    fprintf(stderr, "%s():\n", __FUNCTION__);
+
     overflow = 0;
     res = addu64u64(UINT64_MAX, 1, &overflow);
     put_output(overflow, PRIu64, res);
@@ -84,6 +86,8 @@ test_adds64s64()
 {
     int overflow;
     int64_t res;
+
+    fprintf(stderr, "%s():\n", __FUNCTION__);
 
     overflow = 0;
     res = adds64s64(INT64_MAX, 1, &overflow);
@@ -100,6 +104,8 @@ test_addu32u32()
     int overflow;
     uint32_t res;
 
+    fprintf(stderr, "%s():\n", __FUNCTION__);
+
     overflow = 0;
     res = addu32u32(UINT32_MAX, 1, &overflow);
     put_output(overflow, PRIu32, res);
@@ -114,6 +120,8 @@ test_adds32s32()
 {
     int overflow;
     int32_t res;
+
+    fprintf(stderr, "%s():\n", __FUNCTION__);
 
     overflow = 0;
     res = adds32s32(INT32_MAX, 1, &overflow);
@@ -130,6 +138,8 @@ test_subu64u64()
     int overflow;
     uint64_t res;
 
+    fprintf(stderr, "%s():\n", __FUNCTION__);
+
     overflow = 0;
     res = subu64u64(0, 1, &overflow);
     put_output(overflow, PRIu64, res);
@@ -144,6 +154,8 @@ test_subs64s64()
 {
     int overflow;
     int64_t res;
+
+    fprintf(stderr, "%s():\n", __FUNCTION__);
 
     overflow = 0;
     res = subs64s64(INT64_MIN, 1, &overflow);
@@ -160,6 +172,8 @@ test_subu32u32()
     int overflow;
     uint32_t res;
 
+    fprintf(stderr, "%s():\n", __FUNCTION__);
+
     overflow = 0;
     res = subu32u32(0, 1, &overflow);
     put_output(overflow, PRIu32, res);
@@ -174,6 +188,8 @@ test_subs32s32()
 {
     int overflow;
     int32_t res;
+
+    fprintf(stderr, "%s():\n", __FUNCTION__);
 
     overflow = 0;
     res = subs32s32(INT32_MIN, 1, &overflow);
@@ -190,6 +206,8 @@ test_mulu64u64()
     int overflow;
     uint64_t res;
 
+    fprintf(stderr, "%s():\n", __FUNCTION__);
+
     overflow = 0;
     res = mulu64u64(UINT64_MAX, 2, &overflow);
     put_output(overflow, PRIu64, res);
@@ -204,6 +222,8 @@ test_muls64s64()
 {
     int overflow;
     int64_t res;
+
+    fprintf(stderr, "%s():\n", __FUNCTION__);
 
     overflow = 0;
     res = muls64s64(INT64_MIN, 2, &overflow);
@@ -220,6 +240,8 @@ test_mulu32u32()
     int overflow;
     uint32_t res;
 
+    fprintf(stderr, "%s():\n", __FUNCTION__);
+
     overflow = 0;
     res = mulu32u32(UINT32_MAX, 2, &overflow);
     put_output(overflow, PRIu32, res);
@@ -234,6 +256,8 @@ test_muls32s32()
 {
     int overflow;
     int32_t res;
+
+    fprintf(stderr, "%s():\n", __FUNCTION__);
 
     overflow = 0;
     res = muls32s32(INT32_MIN, 2, &overflow);

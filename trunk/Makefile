@@ -10,7 +10,10 @@ else
 cppflags := -DX86_64
 endif
 
-cflags = -Iinclude -Wall -Wextra
+debugflags = -ggdb3 -O0
+
+asmflags = $(debugflags)
+cflags = $(debugflags) -Iinclude -Wall -Wextra
 
 all: overflow_test
 
@@ -24,13 +27,13 @@ arithmetic.o: arithmetic.c
 	gcc $(cppflags) -c $(cflags) -o $@ $^
 
 add.o: add.S
-	gcc $(cppflags) -c -o $@ $^
+	gcc $(cppflags) -c $(asmflags) -o $@ $^
 
 mul.o: mul.S
-	gcc $(cppflags) -c -o $@ $^
+	gcc $(cppflags) -c $(asmflags) -o $@ $^
 
 sub.o: sub.S
-	gcc $(cppflags) -c -o $@ $^
+	gcc $(cppflags) -c $(asmflags) -o $@ $^
 
 .PHONY: clean
 

@@ -56,14 +56,14 @@ out_u32u32:
 
 #else
     defun       _adds64s64
-    movl        4(%esp), %eax
-    movl        8(%esp), %ecx
-    movl        20(%esp), %edx
-    addl        %ecx, %eax
-    movl        %eax, (%edx)
-    movl        12(%esp), %eax
+    movl        8(%esp), %eax
     movl        16(%esp), %ecx
     movl        24(%esp), %edx
+    addl        %ecx, %eax
+    movl        %eax, (%edx)
+    movl        4(%esp), %eax
+    movl        12(%esp), %ecx
+    movl        20(%esp), %edx
     adcl        %ecx, %eax
     movl        %eax, (%edx)
     jno         out_s64s64
@@ -73,14 +73,14 @@ out_s64s64:
     ret
 
     defun       _addu64u64
-    movl        4(%esp), %eax
-    movl        8(%esp), %ecx
-    movl        20(%esp), %edx
-    addl        %ecx, %eax
-    movl        %eax, (%edx)
-    movl        12(%esp), %eax
+    movl        8(%esp), %eax
     movl        16(%esp), %ecx
     movl        24(%esp), %edx
+    addl        %ecx, %eax
+    movl        %eax, (%edx)
+    movl        4(%esp), %eax
+    movl        12(%esp), %ecx
+    movl        20(%esp), %edx
     adcl        %ecx, %eax
     movl        %eax, (%edx)
     jnc         out_u64u64
