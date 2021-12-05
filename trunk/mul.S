@@ -84,13 +84,15 @@ out_u32u32:
                                     # 2) subtract 1 from a + b
     movl        12(%esp), %edx      # 2a) b
     subl        $1, %edx            # 2b) b'
-    sbbl        $0, %eax            # 2c) a'
+    jc          overflow_s64s64_2
+                                    # 2c) a' = a
                                     # 3) subtract a' + b' from INT_MAX
     movl        %eax, %ecx
-    movl        $0x7fffffff, %eax
+    movl        $0xffffffff, %eax
     subl        %edx, %eax          # 3a) b'
+    jc          overflow_s64s64_2
     movl        $0x7fffffff, %edx
-    sbbl        %ecx, %edx          # 3b) a'
+    subl        %ecx, %edx          # 3b) a'
                                     # 4) save abs(a + b) on stack
     movl        %eax, 12(%esp)      # 4a) b'
     movl        %edx, 8(%esp)       # 4b) a'
@@ -103,12 +105,14 @@ abs_cpd_s64s64:
                                     # 2) subtract 1 from c + d
     movl        20(%esp), %edx      # 2a) d
     subl        $1, %edx            # 2b) d'
-    sbbl        $0, %ecx            # 2c) c'
+    jc          overflow_s64s64_2
+                                    # 2c) c' = c
                                     # 3) subtract c' + d' from INT_MAX
-    movl        $0x7fffffff, %eax
+    movl        $0xffffffff, %eax
     subl        %edx, %eax          # 3a) d'
+    jc          overflow_s64s64_2
     movl        $0x7fffffff, %edx
-    sbbl        %ecx, %edx          # 3b) c'
+    subl        %ecx, %edx          # 3b) c'
                                     # 4) save abs(c + d) on stack
     movl        %eax, 20(%esp)      # 4a) d'
     movl        %edx, 16(%esp)      # 4b) c'
@@ -117,16 +121,17 @@ mul_ad_or_bc_s64s64:
     jz          mul_ad_s64s64
     movl        8(%esp), %eax
     testl       %eax, %eax
-    jnz         overflow_s64s64
+    jnz         overflow_s64s64_2
     movl        12(%esp), %eax      # b
     mull        %ecx                # bc
-    jo          overflow_s64s64
+    jo          overflow_s64s64_2
     movl        20(%esp), %ecx      # d
     jmp         mul_bd_s64s64
 mul_ad_s64s64:
+    movl        8(%esp), %eax       # a
     movl        20(%esp), %ecx      # d
     mull        %ecx                # ad
-    jo          overflow_s64s64
+    jo          overflow_s64s64_2
 mul_bd_s64s64:
     pushl       %eax
     movl        16(%esp), %eax      # b
@@ -134,21 +139,33 @@ mul_bd_s64s64:
     movl        %eax, %ecx
     popl        %eax
     addl        %edx, %eax          # Lh + (H1l + H2l)
-    jc          overflow_s64s64
+    jc          overflow_s64s64_2
     testl       $0xf0000000, %eax
-    jnz         overflow_s64s64
+    jnz         overflow_s64s64_2
     popl        %edx
     andl        $0x00007070, %edx   # determine sign of product
     jnp         nosign_s64s64
-    orl         $0x70000000, %eax
+                                    # subtract 1 from Hl + Ll
+    subl        $1, %ecx
+    jc          overflow_s64s64_1
+                                    # subtract Hl' + L1' from INT_MAX
+    movl        $0xffffffff, %edx
+    subl        %ecx, %edx
+    jc          overflow_s64s64_1
+    movl        %edx, %ecx
+    movl        $0x7fffffff, %edx
+    subl        %eax, %edx
+    movl        %edx, %eax
+    orl         $0x80000000, %eax
 nosign_s64s64:
     movl        20(%esp), %edx
     movl        %eax, (%edx)
     movl        24(%esp), %edx
     movl        %ecx, (%edx)
     ret
-overflow_s64s64:
+overflow_s64s64_2:
     popl        %edx
+overflow_s64s64_1:
     movl        28(%esp), %edx
     orl         $1, (%edx)
     ret
