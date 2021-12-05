@@ -69,12 +69,37 @@ out_u32u32:
 
     defun       _muls64s64
     movl        4(%esp), %edx       # a
+    testl       %edx, %edx
+    jnz         opnd1_not_zero_s64s64
+    movl        8(%esp), %ecx       # b
+    testl       %ecx, %ecx
+    jz          zero_s64s64
+opnd1_not_zero_s64s64:
     movl        12(%esp), %ecx      # c
+    testl       %ecx, %ecx
+    jnz         opnd_not_zero_s64s64
+    movl        16(%esp), %eax      # d
+    testl       %eax, %eax
+    jz          zero_s64s64
+opnd_not_zero_s64s64:
+    testl       %edx, %edx
+    jnz         opnd1_not_plus_one_s64s64
+    movl        8(%esp), %ecx       # b
+    cmpl        $1, %ecx
+    je          opnd2_s64s64
+opnd1_not_plus_one_s64s64:
+    movl        12(%esp), %ecx      # c
+    testl       %ecx, %ecx
+    jnz         opnd_not_plus_one_s64s64
+    cmpl        $1, %eax
+    je          opnd1_s64s64
+opnd_not_plus_one_s64s64:
     testl       %ecx, %ecx          # get sign of c
     lahf
-    shrl        $8, %eax
+    shll        $4, %eax
     testl       %edx, %edx          # get sign of a
     lahf
+    shrl        $12, %eax
     pushl       %eax
     movl        %edx, %eax
     testl       %eax, %eax
@@ -117,9 +142,10 @@ abs_cpd_s64s64:
     movl        %eax, 20(%esp)      # 4a) d'
     movl        %edx, 16(%esp)      # 4b) c'
 mul_ad_or_bc_s64s64:
-    testl       %edx, %edx
+    movl        16(%esp), %ecx      # c
+    testl       %ecx, %ecx
     jz          mul_ad_s64s64
-    movl        8(%esp), %eax
+    movl        8(%esp), %eax       # a
     testl       %eax, %eax
     jnz         overflow_s64s64_2
     movl        12(%esp), %eax      # b
@@ -140,11 +166,11 @@ mul_bd_s64s64:
     popl        %eax
     addl        %edx, %eax          # Lh + (H1l + H2l)
     jc          overflow_s64s64_2
-    testl       $0xf0000000, %eax
+    testl       $0x80000000, %eax
     jnz         overflow_s64s64_2
     popl        %edx
-    andl        $0x00007070, %edx   # determine sign of product
-    jnp         nosign_s64s64
+    testl       $0x00000088, %edx   # determine sign of product
+    jp          nosign_s64s64
                                     # subtract 1 from Hl + Ll
     subl        $1, %ecx
     jc          overflow_s64s64_1
@@ -160,6 +186,28 @@ mul_bd_s64s64:
 nosign_s64s64:
     movl        20(%esp), %edx
     movl        %eax, (%edx)
+    movl        24(%esp), %edx
+    movl        %ecx, (%edx)
+    ret
+zero_s64s64:
+    movl        20(%esp), %edx
+    movl        $0, (%edx)
+    movl        24(%esp), %edx
+    movl        $0, (%edx)
+    ret
+opnd1_s64s64:
+    movl        4(%esp), %eax
+    movl        20(%esp), %edx
+    movl        %eax, (%edx)
+    movl        8(%esp), %ecx
+    movl        24(%esp), %edx
+    movl        %ecx, (%edx)
+    ret
+opnd2_s64s64:
+    movl        12(%esp), %eax
+    movl        20(%esp), %edx
+    movl        %eax, (%edx)
+    movl        16(%esp), %ecx
     movl        24(%esp), %edx
     movl        %ecx, (%edx)
     ret

@@ -1,3 +1,4 @@
 *.o
 
+/arithmetic_test
 /overflow_test
