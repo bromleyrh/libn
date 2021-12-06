@@ -1,0 +1,17 @@
+LIBN_1 {
+    global:
+        addu64u64;
+        adds64s64;
+        addu32u32;
+        adds32s32;
+        subu64u64;
+        subs64s64;
+        subu32u32;
+        subs32s32;
+        mulu64u64;
+        muls64s64;
+        mulu32u32;
+        muls32s32;
+    local:
+        *;
+};
