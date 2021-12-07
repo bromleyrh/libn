@@ -22,6 +22,17 @@ AM_INIT_AUTOMAKE([foreign no-define subdir-objects])
 AM_SILENT_RULES([yes])
 LT_INIT([disable-static])
 
+case $target_cpu in
+    i386|i486|i586|i686)
+        arch=i386;;
+    x86_64)
+        arch=x86_64;;
+    *)
+        AC_MSG_ERROR([unsupported platform], [1]);;
+esac
+AM_CONDITIONAL([I386], [test "x$arch" = "xi386"])
+AM_CONDITIONAL([X86_64], [test "x$arch" = "xx86_64"])
+
 case $target_os in
     *darwin*)
         platform=darwin;;
