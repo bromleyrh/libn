@@ -18,6 +18,7 @@ LIBN_1 {
 
 LIBN_2 {
     global:
+        arithmetic_status;
         divu64u64;
         divs64s64;
         divu32u32;

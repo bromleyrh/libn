@@ -23,6 +23,8 @@ typedef union {
     int64_t emul;
 } cint64_t;
 
+__thread int arithmetic_status;
+
 #ifdef I386
 void _addu64u64(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t *, uint32_t *,
                 int *);
