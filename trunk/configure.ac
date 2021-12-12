@@ -87,6 +87,22 @@ AC_CONFIG_FILES([Makefile include/Makefile libn.pc])
 AC_CONFIG_HEADERS([config.h])
 AC_OUTPUT
 
+dnl Pass sed output to cat in the following to write output in larger blocks,
+dnl reducing the needed time to run the commands
+dnl FIXME: Replace with wrapper script or utility
+postlink_cmds=:
+AS_IF(
+    [test x$platform = xdarwin],
+    [libpath="$(pwd | sed -e 's/\//\\\//g')\/.libs\/libn.dylib"
+     postlink_cmds="${postlink_cmds}; scripts\/fix_up_linking_os_x.sh"
+     postlink_cmds="$postlink_cmds @OUTPUT@ $libpath"]
+)
+lt=libtool
+sed_edit_expr="s/postlink_cmds=\"\"/postlink_cmds=\"$postlink_cmds\"/"
+sed -e "$sed_edit_expr" $lt | cat > ${lt}.new \
+    && mv -f ${lt}.new $lt \
+    && chmod +x $lt
+
 cat <<- EOF
 
 $PACKAGE_NAME configuration

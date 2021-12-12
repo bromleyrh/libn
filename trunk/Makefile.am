@@ -71,6 +71,7 @@ libn_la_LDFLAGS = -version-info @ln_cur@:@ln_rev@:@ln_age@ $(version_script)
 check_PROGRAMS =
 TESTS =
 
+include scripts/Makefile.am
 include tests/Makefile.am
 
 install-exec-hook:
