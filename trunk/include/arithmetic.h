@@ -11,6 +11,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 LIBN_EXPORTED uint64_t addu64u64(uint64_t x, uint64_t y, int *overflow);
 LIBN_EXPORTED int64_t adds64s64(int64_t x, int64_t y, int *overflow);
 
@@ -28,6 +32,10 @@ LIBN_EXPORTED int64_t muls64s64(int64_t x, int64_t y, int *overflow);
 
 LIBN_EXPORTED uint32_t mulu32u32(uint32_t x, uint32_t y, int *overflow);
 LIBN_EXPORTED int32_t muls32s32(int32_t x, int32_t y, int *overflow);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
