@@ -2,7 +2,11 @@
 # mul.S
 #
 
+#if __APPLE__
+    .include    "common_os_x.S"
+#else
     .include    "common.S"
+#endif
 
 #ifdef X86_64
     expfun      muls64s64

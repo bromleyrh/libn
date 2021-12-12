@@ -1,12 +1,10 @@
 #
-# common.S
+# common_os_x.S
 #
 
     .macro      expfun nm
     .globl      \nm
     .globl      _\nm
-    .type       \nm STT_FUNC
-    .type       _\nm STT_FUNC
     .endm
 
     .macro      defun nm
@@ -15,8 +13,6 @@ _\nm :
     .endm
 
     .macro      funsz nm
-    .size       \nm, .-\nm
-    .size       _\nm, .-_\nm
     .endm
 
 # vi: set expandtab sw=4 ts=4:
