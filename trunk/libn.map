@@ -15,3 +15,11 @@ LIBN_1 {
     local:
         *;
 };
+
+LIBN_2 {
+    global:
+        divu64u64;
+        divs64s64;
+        divu32u32;
+        divs32s32;
+} LIBN_1;

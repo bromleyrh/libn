@@ -33,6 +33,12 @@ LIBN_EXPORTED int64_t muls64s64(int64_t x, int64_t y, int *overflow);
 LIBN_EXPORTED uint32_t mulu32u32(uint32_t x, uint32_t y, int *overflow);
 LIBN_EXPORTED int32_t muls32s32(int32_t x, int32_t y, int *overflow);
 
+LIBN_EXPORTED uint64_t divu64u64(uint64_t x, uint64_t y, int *diverr);
+LIBN_EXPORTED int64_t divs64s64(int64_t x, int64_t y, int *diverr);
+
+LIBN_EXPORTED uint32_t divu32u32(uint32_t x, uint32_t y, int *diverr);
+LIBN_EXPORTED int32_t divs32s32(int32_t x, int32_t y, int *diverr);
+
 #ifdef __cplusplus
 }
 #endif

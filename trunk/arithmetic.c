@@ -4,6 +4,7 @@
 
 #include "arithmetic.h"
 
+#include <limits.h>
 #include <stdint.h>
 
 typedef union {
@@ -108,5 +109,49 @@ muls64s64(int64_t x, int64_t y, int *overflow)
 }
 
 #endif
+
+uint64_t
+divu64u64(uint64_t x, uint64_t y, int *diverr)
+{
+    if (y == 0) {
+        *diverr |= 2;
+        return UINT64_MAX;
+    }
+
+    return x / y;
+}
+
+int64_t
+divs64s64(int64_t x, int64_t y, int *diverr)
+{
+    if (y == 0) {
+        *diverr |= 2;
+        return INT64_MAX;
+    }
+
+    return x / y;
+}
+
+uint32_t
+divu32u32(uint32_t x, uint32_t y, int *diverr)
+{
+    if (y == 0) {
+        *diverr |= 2;
+        return UINT32_MAX;
+    }
+
+    return x / y;
+}
+
+int32_t
+divs32s32(int32_t x, int32_t y, int *diverr)
+{
+    if (y == 0) {
+        *diverr |= 2;
+        return INT32_MAX;
+    }
+
+    return x / y;
+}
 
 /* vi: set expandtab sw=4 ts=4: */
