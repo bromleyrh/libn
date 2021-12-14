@@ -2,6 +2,7 @@
 # mul.S
 #
 
+    .include    "arithmetic.S"
 #if __APPLE__
     .include    "common_os_x.S"
 #else
@@ -26,7 +27,7 @@
     movq        %rdi, %rax
     imulq       %rsi, %rax
     jno         out_s64s64
-    orl         $1, (%rdx)
+    orl         $overflow, (%rdx)
 out_s64s64:
     ret
     funsz       muls64s64
@@ -36,7 +37,7 @@ out_s64s64:
     movq        %rdi, %rax
     mulq        %rsi
     jno         out_u64u64
-    orl         $1, (%rcx)
+    orl         $overflow, (%rcx)
 out_u64u64:
     ret
     funsz       mulu64u64
@@ -45,7 +46,7 @@ out_u64u64:
     movl        %edi, %eax
     imull       %esi, %eax
     jno         out_s32s32
-    orl         $1, (%rdx)
+    orl         $overflow, (%rdx)
 out_s32s32:
     ret
     funsz       muls32s32
@@ -55,7 +56,7 @@ out_s32s32:
     movl        %edi, %eax
     mull        %esi
     jno         out_u32u32
-    orl         $1, (%rcx)
+    orl         $overflow, (%rcx)
 out_u32u32:
     ret
     funsz       mulu32u32
@@ -219,7 +220,7 @@ overflow_s64s64_2:
     popl        %edx
 overflow_s64s64_1:
     movl        28(%esp), %edx
-    orl         $1, (%edx)
+    orl         $overflow, (%edx)
     ret
 
     defun       _mulu64u64
@@ -253,7 +254,7 @@ mul_bd_u64u64:
     ret
 overflow_u64u64:
     movl        28(%esp), %edx
-    orl         $1, (%edx)
+    orl         $overflow, (%edx)
     ret
 
     defun       muls32s32
@@ -262,7 +263,7 @@ overflow_u64u64:
     imull       %ecx, %eax
     jno         out_s32s32
     movl        12(%esp), %edx
-    orl         $1, (%edx)
+    orl         $overflow, (%edx)
 out_s32s32:
     ret
     funsz       muls32s32
@@ -273,7 +274,7 @@ out_s32s32:
     mull        %ecx
     jno         out_u32u32
     movl        12(%esp), %ecx
-    orl         $1, (%ecx)
+    orl         $overflow, (%ecx)
 out_u32u32:
     ret
     funsz       mulu32u32

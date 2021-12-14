@@ -15,6 +15,9 @@
 extern "C" {
 #endif
 
+#define OVERFLOW 1
+#define DIVERR 2
+
 extern LIBN_EXPORTED __thread int arithmetic_status;
 
 #define in \
