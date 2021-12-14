@@ -31,3 +31,5 @@ version.c
 *.loT
 *.o
 *.so
+
+*.log
