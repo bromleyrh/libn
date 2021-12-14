@@ -279,6 +279,43 @@ main(int argc, char **argv)
     for (i = 0; i < ARRAY_SIZE(test_fns); i++)
         (*test_fns[i])();
 
+    in {
+        uint64_t n;
+
+        n = mulou64u64(INT64_MAX, INT64_MAX);
+        (void)n;
+    } trap
+        fputs("Overflow\n", stderr);
+
+    in {
+        uint64_t n;
+
+        n = mulou64u64(INT64_MAX, INT64_MAX);
+        (void)n;
+        break;
+    } trap
+        fputs("Bug\n", stderr);
+
+    in {
+        uint64_t n;
+
+        n = mulou64u64(INT64_MAX, 1);
+        continue;
+        n = mulou64u64(INT64_MAX, INT64_MAX);
+        (void)n;
+    } trap
+        fputs("Bug\n", stderr);
+
+    in {
+        uint64_t n;
+
+        n = mulou64u64(INT64_MAX, INT64_MAX);
+        continue;
+        n = mulou64u64(INT64_MAX, 1);
+        (void)n;
+    } trap
+        fputs("Overflow\n", stderr);
+
     return EXIT_SUCCESS;
 }
 

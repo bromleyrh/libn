@@ -17,17 +17,19 @@ extern "C" {
 
 #define OVERFLOW 1
 #define DIVERR 2
+#define NOTRAP 4
 
 extern LIBN_EXPORTED __thread int arithmetic_status;
 
 #define in \
     do { \
-        arithmetic_status = 0; \
+        arithmetic_status = NOTRAP; \
         do
 #define trap \
-        while (0); \
+        while ((arithmetic_status &= ~NOTRAP) >= NOTRAP); \
     } while (0); \
-    if (arithmetic_status != 0)
+    if (arithmetic_status && (arithmetic_status < NOTRAP) \
+        && !(arithmetic_status = 0))
 
 #define addou64u64(x, y) addu64u64(x, y, &arithmetic_status)
 #define addos64s64(x, y) adds64s64(x, y, &arithmetic_status)
