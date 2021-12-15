@@ -5,7 +5,13 @@
 #include "arithmetic.h"
 
 #include <limits.h>
+#include <setjmp.h>
 #include <stdint.h>
+
+#define u64_t uint64_t
+#define s64_t int64_t
+#define u32_t uint32_t
+#define s32_t int32_t
 
 typedef union {
     struct {
@@ -23,7 +29,7 @@ typedef union {
     int64_t emul;
 } cint64_t;
 
-__thread int arithmetic_status;
+__thread sigjmp_buf aenv;
 
 #ifdef I386
 void _addu64u64(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t *, uint32_t *,
@@ -42,6 +48,45 @@ void _muls64s64(int32_t, int32_t, int32_t, int32_t, int32_t *, uint32_t *,
                 int *);
 
 #endif
+static uint64_t
+op_with_trap_u64u64(uint64_t (*)(uint64_t, uint64_t, int *), uint64_t, uint64_t,
+                    sigjmp_buf);
+static int64_t
+op_with_trap_s64s64(int64_t (*)(int64_t, int64_t, int *), int64_t, int64_t,
+                    sigjmp_buf);
+static uint32_t
+op_with_trap_u32u32(uint32_t (*)(uint32_t, uint32_t, int *), uint32_t, uint32_t,
+                    sigjmp_buf);
+static int32_t
+op_with_trap_s32s32(int32_t (*)(int32_t, int32_t, int *), int32_t, int32_t,
+                    sigjmp_buf);
+
+#define DEFINE_GENERIC_OP_WITH_TRAP(typ) \
+    static typ##_t \
+    op_with_trap_##typ##typ(typ##_t (*op)(typ##_t, typ##_t, int *), typ##_t x, \
+                            typ##_t y, sigjmp_buf env) \
+    { \
+        int flags = 0; \
+        typ##_t res; \
+        \
+        res = (*op)(x, y, &flags); \
+        if (flags != 0) \
+            siglongjmp(env, 1); \
+        \
+        return res; \
+    }
+
+#define DEFINE_OP_WITH_TRAP(op, typ) \
+    typ##_t \
+    op##t##typ##typ(typ##_t x, typ##_t y, sigjmp_buf env) \
+    { \
+        return op_with_trap_##typ##typ(&op##typ##typ, x, y, env); \
+    }
+
+DEFINE_GENERIC_OP_WITH_TRAP(u64)
+DEFINE_GENERIC_OP_WITH_TRAP(s64)
+DEFINE_GENERIC_OP_WITH_TRAP(u32)
+DEFINE_GENERIC_OP_WITH_TRAP(s32)
 
 #ifdef I386
 uint64_t
@@ -155,5 +200,25 @@ divs32s32(int32_t x, int32_t y, int *diverr)
 
     return x / y;
 }
+
+DEFINE_OP_WITH_TRAP(add, u64)
+DEFINE_OP_WITH_TRAP(add, s64)
+DEFINE_OP_WITH_TRAP(add, u32)
+DEFINE_OP_WITH_TRAP(add, s32)
+
+DEFINE_OP_WITH_TRAP(sub, u64)
+DEFINE_OP_WITH_TRAP(sub, s64)
+DEFINE_OP_WITH_TRAP(sub, u32)
+DEFINE_OP_WITH_TRAP(sub, s32)
+
+DEFINE_OP_WITH_TRAP(mul, u64)
+DEFINE_OP_WITH_TRAP(mul, s64)
+DEFINE_OP_WITH_TRAP(mul, u32)
+DEFINE_OP_WITH_TRAP(mul, s32)
+
+DEFINE_OP_WITH_TRAP(div, u64)
+DEFINE_OP_WITH_TRAP(div, s64)
+DEFINE_OP_WITH_TRAP(div, u32)
+DEFINE_OP_WITH_TRAP(div, s32)
 
 /* vi: set expandtab sw=4 ts=4: */

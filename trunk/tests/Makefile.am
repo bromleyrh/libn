@@ -21,7 +21,7 @@ tests_arithmetic_test_DEPENDENCIES = libn.la
 
 tests_overflow_test_SOURCES = tests/overflow_test.c
 tests_overflow_test_CPPFLAGS = $(AM_CPPFLAGS) -Iinclude
-tests_overflow_test_CFLAGS = $(AM_CFLAGS)
+tests_overflow_test_CFLAGS = $(AM_CFLAGS) -Wno-dangling-else
 tests_overflow_test_LDADD = $(arithmetic_link)
 tests_overflow_test_LDFLAGS = $(test_ldflags)
 tests_overflow_test_DEPENDENCIES = libn.la

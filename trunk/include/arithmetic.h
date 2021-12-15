@@ -9,6 +9,7 @@
 #include <arithmetic/libn_common.h>
 #undef _LIBN_H_INTERNAL
 
+#include <setjmp.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -17,43 +18,39 @@ extern "C" {
 
 #define OVERFLOW 1
 #define DIVERR 2
-#define NOTRAP 4
 
-extern LIBN_EXPORTED __thread int arithmetic_status;
+extern LIBN_EXPORTED __thread sigjmp_buf aenv;
 
-#define in \
-    do { \
-        arithmetic_status = NOTRAP; \
-        do
 #define trap \
-        while ((arithmetic_status &= ~NOTRAP) >= NOTRAP); \
-    } while (0); \
-    if (arithmetic_status && (arithmetic_status < NOTRAP) \
-        && !(arithmetic_status = 0))
+    if (sigsetjmp(aenv, 0) != 0) { \
+        do
+#define in \
+        while (0); \
+    } else
 
-#define addou64u64(x, y) addu64u64(x, y, &arithmetic_status)
-#define addos64s64(x, y) adds64s64(x, y, &arithmetic_status)
+#define addou64u64(x, y) addtu64u64(x, y, aenv)
+#define addos64s64(x, y) addts64s64(x, y, aenv)
 
-#define addou32u32(x, y) addu32u32(x, y, &arithmetic_status)
-#define addos32s32(x, y) adds32s32(x, y, &arithmetic_status)
+#define addou32u32(x, y) addtu32u32(x, y, aenv)
+#define addos32s32(x, y) addts32s32(x, y, aenv)
 
-#define subou64u64(x, y) subu64u64(x, y, &arithmetic_status)
-#define subos64s64(x, y) subs64s64(x, y, &arithmetic_status)
+#define subou64u64(x, y) subtu64u64(x, y, aenv)
+#define subos64s64(x, y) subts64s64(x, y, aenv)
 
-#define subou32u32(x, y) subu32u32(x, y, &arithmetic_status)
-#define subos32s32(x, y) subs32s32(x, y, &arithmetic_status)
+#define subou32u32(x, y) subtu32u32(x, y, aenv)
+#define subos32s32(x, y) subts32s32(x, y, aenv)
 
-#define mulou64u64(x, y) mulu64u64(x, y, &arithmetic_status)
-#define mulos64s64(x, y) muls64s64(x, y, &arithmetic_status)
+#define mulou64u64(x, y) multu64u64(x, y, aenv)
+#define mulos64s64(x, y) mults64s64(x, y, aenv)
 
-#define mulou32u32(x, y) mulu32u32(x, y, &arithmetic_status)
-#define mulos32s32(x, y) muls32s32(x, y, &arithmetic_status)
+#define mulou32u32(x, y) multu32u32(x, y, aenv)
+#define mulos32s32(x, y) mults32s32(x, y, aenv)
 
-#define divzu64u64(x, y) divu64u64(x, y, &arithmetic_status)
-#define divzs64s64(x, y) divs64s64(x, y, &arithmetic_status)
+#define divzu64u64(x, y) divtu64u64(x, y, aenv)
+#define divzs64s64(x, y) divts64s64(x, y, aenv)
 
-#define divzu32u32(x, y) divu32u32(x, y, &arithmetic_status)
-#define divzs32s32(x, y) divs32s32(x, y, &arithmetic_status)
+#define divzu32u32(x, y) divtu32u32(x, y, aenv)
+#define divzs32s32(x, y) divts32s32(x, y, aenv)
 
 #if __WORDSIZE__ == 64
 #define addouzuz(x, y) addou64u64(x, y)
@@ -90,6 +87,30 @@ LIBN_EXPORTED int64_t divs64s64(int64_t x, int64_t y, int *diverr);
 
 LIBN_EXPORTED uint32_t divu32u32(uint32_t x, uint32_t y, int *diverr);
 LIBN_EXPORTED int32_t divs32s32(int32_t x, int32_t y, int *diverr);
+
+LIBN_EXPORTED uint64_t addtu64u64(uint64_t x, uint64_t y, sigjmp_buf env);
+LIBN_EXPORTED int64_t addts64s64(int64_t x, int64_t y, sigjmp_buf env);
+
+LIBN_EXPORTED uint32_t addtu32u32(uint32_t x, uint32_t y, sigjmp_buf env);
+LIBN_EXPORTED int32_t addts32s32(int32_t x, int32_t y, sigjmp_buf env);
+
+LIBN_EXPORTED uint64_t subtu64u64(uint64_t x, uint64_t y, sigjmp_buf env);
+LIBN_EXPORTED int64_t subts64s64(int64_t x, int64_t y, sigjmp_buf env);
+
+LIBN_EXPORTED uint32_t subtu32u32(uint32_t x, uint32_t y, sigjmp_buf env);
+LIBN_EXPORTED int32_t subts32s32(int32_t x, int32_t y, sigjmp_buf env);
+
+LIBN_EXPORTED uint64_t multu64u64(uint64_t x, uint64_t y, sigjmp_buf env);
+LIBN_EXPORTED int64_t mults64s64(int64_t x, int64_t y, sigjmp_buf env);
+
+LIBN_EXPORTED uint32_t multu32u32(uint32_t x, uint32_t y, sigjmp_buf env);
+LIBN_EXPORTED int32_t mults32s32(int32_t x, int32_t y, sigjmp_buf env);
+
+LIBN_EXPORTED uint64_t divtu64u64(uint64_t x, uint64_t y, sigjmp_buf env);
+LIBN_EXPORTED int64_t divts64s64(int64_t x, int64_t y, sigjmp_buf env);
+
+LIBN_EXPORTED uint32_t divtu32u32(uint32_t x, uint32_t y, sigjmp_buf env);
+LIBN_EXPORTED int32_t divts32s32(int32_t x, int32_t y, sigjmp_buf env);
 
 #ifdef __cplusplus
 }

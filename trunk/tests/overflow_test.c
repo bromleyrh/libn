@@ -28,6 +28,8 @@ static void test_muls64s64(void);
 static void test_mulu32u32(void);
 static void test_muls32s32(void);
 
+static void test_fn(void);
+
 static void (*const test_fns[])(void) = {
     &test_addu64u64,
     &test_adds64s64,
@@ -268,6 +270,15 @@ test_muls32s32()
     put_output(overflow, PRIi32, res);
 }
 
+static void
+test_fn()
+{
+    uint64_t n;
+
+    n = mulou64u64(INT64_MAX, INT64_MAX);
+    (void)n;
+}
+
 int
 main(int argc, char **argv)
 {
@@ -279,42 +290,43 @@ main(int argc, char **argv)
     for (i = 0; i < ARRAY_SIZE(test_fns); i++)
         (*test_fns[i])();
 
-    in {
-        uint64_t n;
+    trap
+        fputs("Overflow trapped\n", stderr);
+    in
+        test_fn();
 
-        n = mulou64u64(INT64_MAX, INT64_MAX);
-        (void)n;
-    } trap
-        fputs("Overflow\n", stderr);
-
-    in {
-        uint64_t n;
-
-        n = mulou64u64(INT64_MAX, INT64_MAX);
-        (void)n;
-        break;
-    } trap
+    if (1)
+        trap
+            if (1)
+                fputs("Overflow trapped\n", stderr);
+        in
+            test_fn();
+    else
         fputs("Bug\n", stderr);
 
-    in {
-        uint64_t n;
+    if (0)
+        ;
+    else
+        trap
+            if (1)
+                fputs("Overflow trapped\n", stderr);
+        in
+            test_fn();
 
-        n = mulou64u64(INT64_MAX, 1);
-        continue;
-        n = mulou64u64(INT64_MAX, INT64_MAX);
-        (void)n;
-    } trap
-        fputs("Bug\n", stderr);
+    for (i = 0; i < 3; i++)
+        trap
+            if (1)
+                fputs("Overflow trapped\n", stderr);
+        in
+            test_fn();
 
-    in {
-        uint64_t n;
-
-        n = mulou64u64(INT64_MAX, INT64_MAX);
-        continue;
-        n = mulou64u64(INT64_MAX, 1);
-        (void)n;
-    } trap
-        fputs("Overflow\n", stderr);
+    do {
+        trap
+            if (1)
+                fputs("Overflow trapped\n", stderr);
+        in
+            test_fn();
+    } while (0);
 
     return EXIT_SUCCESS;
 }

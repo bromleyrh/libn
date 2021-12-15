@@ -24,3 +24,20 @@ LIBN_2 {
         divu32u32;
         divs32s32;
 } LIBN_1;
+
+LIBN_4 {
+    global:
+        addtu64u64;
+        addts64s64;
+        addtu32u32;
+        addts32s32;
+        aenv;
+        subtu64u64;
+        subts64s64;
+        subtu32u32;
+        subts32s32;
+        multu64u64;
+        mults64s64;
+        multu32u32;
+        mults32s32;
+} LIBN_2;
