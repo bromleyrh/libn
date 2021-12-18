@@ -6,7 +6,9 @@
 
 #include <limits.h>
 #include <setjmp.h>
+#include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #define u64_t uint64_t
 #define s64_t int64_t
@@ -29,7 +31,10 @@ typedef union {
     int64_t emul;
 } cint64_t;
 
-__thread sigjmp_buf aenv;
+__thread sigjmp_buf aenv[ASTKMAX];
+__thread int abreak[ASTKMAX+1] = {[0] = 1};
+__thread size_t aenvoff;
+__thread int atmp;
 
 #ifdef I386
 void _addu64u64(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t *, uint32_t *,
@@ -220,5 +225,12 @@ DEFINE_OP_WITH_TRAP(div, u64)
 DEFINE_OP_WITH_TRAP(div, s64)
 DEFINE_OP_WITH_TRAP(div, u32)
 DEFINE_OP_WITH_TRAP(div, s32)
+
+int
+astko()
+{
+    abort();
+    return -1;
+}
 
 /* vi: set expandtab sw=4 ts=4: */

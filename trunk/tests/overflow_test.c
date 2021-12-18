@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static int testnum;
+
 static void test_addu64u64(void);
 static void test_adds64s64(void);
 
@@ -49,6 +51,9 @@ static void (*const test_fns[])(void) = {
 
 static void put_output(int, const char *, ...);
 
+static void put_bug(void);
+static void put_success(void);
+
 static void
 put_output(int overflow, const char *pri, ...)
 {
@@ -64,6 +69,19 @@ put_output(int overflow, const char *pri, ...)
         vprintf(fmt, ap);
         va_end(ap);
     }
+}
+
+static void
+put_bug()
+{
+    fputs("Bug\n", stderr);
+}
+
+static void
+put_success()
+{
+    ++testnum;
+    fprintf(stderr, "Overflow %d trapped\n", testnum);
 }
 
 static void
@@ -291,42 +309,87 @@ main(int argc, char **argv)
         (*test_fns[i])();
 
     trap
-        fputs("Overflow trapped\n", stderr);
+        put_success();
     in
         test_fn();
 
     if (1)
         trap
             if (1)
-                fputs("Overflow trapped\n", stderr);
+                put_success();
         in
             test_fn();
     else
-        fputs("Bug\n", stderr);
+        put_bug();
 
     if (0)
         ;
     else
         trap
             if (1)
-                fputs("Overflow trapped\n", stderr);
+                put_success();
         in
             test_fn();
 
     for (i = 0; i < 3; i++)
         trap
             if (1)
-                fputs("Overflow trapped\n", stderr);
+                put_success();
         in
             test_fn();
 
     do {
         trap
             if (1)
-                fputs("Overflow trapped\n", stderr);
+                put_success();
         in
             test_fn();
     } while (0);
+
+    trap
+        put_bug();
+    in {
+        trap
+            put_bug();
+        in
+            trap
+                put_bug();
+            in {
+                trap
+                    put_success();
+                in
+                    test_fn();
+                trap {
+                    put_success();
+                    trap
+                        put_success();
+                    in
+                        test_fn();
+                } in
+                    test_fn();
+            }
+        trap
+            put_success();
+        in {
+            trap
+                put_bug();
+            in {
+                trap {
+                    put_success();
+                    trap
+                        put_success();
+                    in
+                        test_fn();
+                } in
+                    test_fn();
+                trap
+                    put_success();
+                in
+                    test_fn();
+            }
+            test_fn();
+        }
+    }
 
     return EXIT_SUCCESS;
 }

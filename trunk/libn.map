@@ -41,3 +41,11 @@ LIBN_4 {
         multu32u32;
         mults32s32;
 } LIBN_2;
+
+LIBN_5 {
+    global:
+        abreak;
+        aenvoff;
+        astko;
+        atmp;
+} LIBN_4;
