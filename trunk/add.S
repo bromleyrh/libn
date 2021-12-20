@@ -26,36 +26,36 @@
     defun       adds64s64
     movq        %rdi, %rax
     addq        %rsi, %rax
-    jno         out_s64s64
+    jno         0f
     orl         $overflow, (%rdx)
-out_s64s64:
+0:
     ret
     funsz       adds64s64
 
     defun       addu64u64
     movq        %rdi, %rax
     addq        %rsi, %rax
-    jnc         out_u64u64
+    jnc         0f
     orl         $overflow, (%rdx)
-out_u64u64:
+0:
     ret
     funsz       addu64u64
 
     defun       adds32s32
     movl        %edi, %eax
     addl        %esi, %eax
-    jno         out_s32s32
+    jno         0f
     orl         $overflow, (%rdx)
-out_s32s32:
+0:
     ret
     funsz       adds32s32
 
     defun       addu32u32
     movl        %edi, %eax
     addl        %esi, %eax
-    jnc         out_u32u32
+    jnc         0f
     orl         $overflow, (%rdx)
-out_u32u32:
+0:
     ret
     funsz       addu32u32
 
@@ -71,10 +71,10 @@ out_u32u32:
     movl        20(%esp), %edx
     adcl        %ecx, %eax
     movl        %eax, (%edx)
-    jno         out_s64s64
+    jno         0f
     movl        28(%esp), %edx
     orl         $overflow, (%edx)
-out_s64s64:
+0:
     ret
 
     defun       _addu64u64
@@ -88,20 +88,20 @@ out_s64s64:
     movl        20(%esp), %edx
     adcl        %ecx, %eax
     movl        %eax, (%edx)
-    jnc         out_u64u64
+    jnc         0f
     movl        28(%esp), %edx
     orl         $overflow, (%edx)
-out_u64u64:
+0:
     ret
 
     defun       adds32s32
     movl        4(%esp), %eax
     movl        8(%esp), %ecx
     addl        %ecx, %eax
-    jno         out_s32s32
+    jno         0f
     movl        12(%esp), %edx
     orl         $overflow, (%edx)
-out_s32s32:
+0:
     ret
     funsz       adds32s32
 
@@ -109,10 +109,10 @@ out_s32s32:
     movl        4(%esp), %eax
     movl        8(%esp), %ecx
     addl        %ecx, %eax
-    jnc         out_u32u32
+    jnc         0f
     movl        12(%esp), %edx
     orl         $overflow, (%edx)
-out_u32u32:
+0:
     ret
     funsz       addu32u32
 
