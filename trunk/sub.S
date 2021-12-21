@@ -61,58 +61,70 @@
 
 #else
     defun       _subs64s64
+    pushl       %ebp
+    movl        %esp, %ebp
+    movl        12(%esp), %eax
+    movl        20(%esp), %ecx
+    movl        28(%esp), %edx
+    subl        %ecx, %eax
+    movl        %eax, (%edx)
     movl        8(%esp), %eax
     movl        16(%esp), %ecx
     movl        24(%esp), %edx
-    subl        %ecx, %eax
-    movl        %eax, (%edx)
-    movl        4(%esp), %eax
-    movl        12(%esp), %ecx
-    movl        20(%esp), %edx
     sbbl        %ecx, %eax
     movl        %eax, (%edx)
     jno         0f
-    movl        28(%esp), %edx
+    movl        32(%esp), %edx
     orl         $overflow, (%edx)
 0:
+    popl        %ebp
     ret
 
     defun       _subu64u64
+    pushl       %ebp
+    movl        %esp, %ebp
+    movl        12(%esp), %eax
+    movl        20(%esp), %ecx
+    movl        28(%esp), %edx
+    subl        %ecx, %eax
+    movl        %eax, (%edx)
     movl        8(%esp), %eax
     movl        16(%esp), %ecx
     movl        24(%esp), %edx
-    subl        %ecx, %eax
-    movl        %eax, (%edx)
-    movl        4(%esp), %eax
-    movl        12(%esp), %ecx
-    movl        20(%esp), %edx
     sbbl        %ecx, %eax
     movl        %eax, (%edx)
     jnc         0f
-    movl        28(%esp), %edx
+    movl        32(%esp), %edx
     orl         $overflow, (%edx)
 0:
+    popl        %ebp
     ret
 
     defun       subs32s32
-    movl        4(%esp), %eax
-    movl        8(%esp), %ecx
+    pushl       %ebp
+    movl        %esp, %ebp
+    movl        8(%esp), %eax
+    movl        12(%esp), %ecx
     subl        %ecx, %eax
     jno         0f
-    movl        12(%esp), %edx
+    movl        16(%esp), %edx
     orl         $overflow, (%edx)
 0:
+    popl        %ebp
     ret
     funsz       subs32s32
 
     defun       subu32u32
-    movl        4(%esp), %eax
-    movl        8(%esp), %ecx
+    pushl       %ebp
+    movl        %esp, %ebp
+    movl        8(%esp), %eax
+    movl        12(%esp), %ecx
     subl        %ecx, %eax
     jnc         0f
-    movl        12(%esp), %edx
+    movl        16(%esp), %edx
     orl         $overflow, (%edx)
 0:
+    popl        %ebp
     ret
     funsz       subu32u32
 

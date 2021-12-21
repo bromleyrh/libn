@@ -73,27 +73,29 @@
 #
 
     defun       _muls64s64
-    movl        4(%esp), %edx       # a
+    pushl       %ebp
+    movl        %esp, %ebp
+    movl        8(%esp), %edx       # a
     testl       %edx, %edx
     jnz         0f
-    movl        8(%esp), %ecx       # b
+    movl        12(%esp), %ecx      # b
     testl       %ecx, %ecx
     jz          9f
 0:
-    movl        12(%esp), %ecx      # c
+    movl        16(%esp), %ecx      # c
     testl       %ecx, %ecx
     jnz         1f
-    movl        16(%esp), %eax      # d
+    movl        20(%esp), %eax      # d
     testl       %eax, %eax
     jz          9f
 1:
     testl       %edx, %edx
     jnz         2f
-    movl        8(%esp), %ecx       # b
+    movl        12(%esp), %ecx      # b
     cmpl        $1, %ecx
     je          1f
 2:
-    movl        12(%esp), %ecx      # c
+    movl        16(%esp), %ecx      # c
     testl       %ecx, %ecx
     jnz         3f
     cmpl        $1, %eax
@@ -112,7 +114,7 @@
                                     # get absolute value of a + b
     andl        $0x7fffffff, %eax   # 1) clear sign bit
                                     # 2) subtract 1 from a + b
-    movl        12(%esp), %edx      # 2a) b
+    movl        16(%esp), %edx      # 2a) b
     subl        $1, %edx            # 2b) b'
     jc          2f
                                     # 2c) a' = a
@@ -124,16 +126,16 @@
     movl        $0x7fffffff, %edx
     subl        %ecx, %edx          # 3b) a'
                                     # 4) save abs(a + b) on stack
-    movl        %eax, 12(%esp)      # 4a) b'
-    movl        %edx, 8(%esp)       # 4b) a'
+    movl        %eax, 16(%esp)      # 4a) b'
+    movl        %edx, 12(%esp)      # 4b) a'
 4:
-    movl        16(%esp), %ecx      # c
+    movl        20(%esp), %ecx      # c
     testl       %ecx, %ecx
     jns         5f
                                     # get absolute value of c + d
     andl        $0x7fffffff, %ecx   # 1) clear sign bit
                                     # 2) subtract 1 from c + d
-    movl        20(%esp), %edx      # 2a) d
+    movl        24(%esp), %edx      # 2a) d
     subl        $1, %edx            # 2b) d'
     jc          2f
                                     # 2c) c' = c
@@ -144,28 +146,28 @@
     movl        $0x7fffffff, %edx
     subl        %ecx, %edx          # 3b) c'
                                     # 4) save abs(c + d) on stack
-    movl        %eax, 20(%esp)      # 4a) d'
-    movl        %edx, 16(%esp)      # 4b) c'
+    movl        %eax, 24(%esp)      # 4a) d'
+    movl        %edx, 20(%esp)      # 4b) c'
 5:
-    movl        16(%esp), %ecx      # c
+    movl        20(%esp), %ecx      # c
     testl       %ecx, %ecx
     jz          6f
-    movl        8(%esp), %eax       # a
+    movl        12(%esp), %eax      # a
     testl       %eax, %eax
     jnz         2f
-    movl        12(%esp), %eax      # b
+    movl        16(%esp), %eax      # b
     mull        %ecx                # bc
     jo          2f
-    movl        20(%esp), %ecx      # d
+    movl        24(%esp), %ecx      # d
     jmp         7f
 6:
-    movl        8(%esp), %eax       # a
-    movl        20(%esp), %ecx      # d
+    movl        12(%esp), %eax      # a
+    movl        24(%esp), %ecx      # d
     mull        %ecx                # ad
     jo          2f
 7:
     pushl       %eax
-    movl        16(%esp), %eax      # b
+    movl        20(%esp), %eax      # b
     mull        %ecx                # bd
     movl        %eax, %ecx
     popl        %eax
@@ -189,93 +191,108 @@
     movl        %edx, %eax
     orl         $0x80000000, %eax
 8:
-    movl        20(%esp), %edx
-    movl        %eax, (%edx)
     movl        24(%esp), %edx
+    movl        %eax, (%edx)
+    movl        28(%esp), %edx
     movl        %ecx, (%edx)
+    popl        %ebp
     ret
 9:
-    movl        20(%esp), %edx
-    movl        $0, (%edx)
     movl        24(%esp), %edx
     movl        $0, (%edx)
+    movl        28(%esp), %edx
+    movl        $0, (%edx)
+    popl        %ebp
     ret
 0:
-    movl        4(%esp), %eax
-    movl        20(%esp), %edx
-    movl        %eax, (%edx)
-    movl        8(%esp), %ecx
+    movl        8(%esp), %eax
     movl        24(%esp), %edx
+    movl        %eax, (%edx)
+    movl        12(%esp), %ecx
+    movl        28(%esp), %edx
     movl        %ecx, (%edx)
+    popl        %ebp
     ret
 1:
-    movl        12(%esp), %eax
-    movl        20(%esp), %edx
-    movl        %eax, (%edx)
-    movl        16(%esp), %ecx
+    movl        16(%esp), %eax
     movl        24(%esp), %edx
+    movl        %eax, (%edx)
+    movl        20(%esp), %ecx
+    movl        28(%esp), %edx
     movl        %ecx, (%edx)
+    popl        %ebp
     ret
 2:
     popl        %edx
 3:
-    movl        28(%esp), %edx
+    movl        32(%esp), %edx
     orl         $overflow, (%edx)
+    popl        %ebp
     ret
 
     defun       _mulu64u64
-    movl        4(%esp), %eax   # a
-    movl        12(%esp), %ecx  # c
+    pushl       %ebp
+    movl        %esp, %ebp
+    movl        8(%esp), %eax   # a
+    movl        16(%esp), %ecx  # c
     testl       %ecx, %ecx
     jz          0f
     testl       %eax, %eax
     jnz         2f
-    movl        8(%esp), %eax   # b
+    movl        12(%esp), %eax  # b
     mull        %ecx
     jo          2f
-    movl        16(%esp), %ecx  # d
+    movl        20(%esp), %ecx  # d
     jmp         1f
 0:
-    movl        16(%esp), %ecx  # d
+    movl        20(%esp), %ecx  # d
     mull        %ecx
     jo          2f
 1:
     pushl       %eax
-    movl        12(%esp), %eax  # b
+    movl        16(%esp), %eax  # b
     mull        %ecx
     movl        %eax, %ecx
     popl        %eax
     addl        %edx, %eax
     jc          2f
-    movl        20(%esp), %edx
-    movl        %eax, (%edx)
     movl        24(%esp), %edx
+    movl        %eax, (%edx)
+    movl        28(%esp), %edx
     movl        %ecx, (%edx)
+    popl        %ebp
     ret
 2:
-    movl        28(%esp), %edx
+    movl        32(%esp), %edx
     orl         $overflow, (%edx)
+    popl        %ebp
     ret
 
     defun       muls32s32
-    movl        4(%esp), %eax
-    movl        8(%esp), %ecx
+    pushl       %ebp
+    movl        %esp, %ebp
+    movl        8(%esp), %eax
+    movl        12(%esp), %ecx
     imull       %ecx, %eax
     jno         0f
-    movl        12(%esp), %edx
+    movl        16(%esp), %edx
     orl         $overflow, (%edx)
 0:
+    popl        %ebp
     ret
     funsz       muls32s32
 
     defun       mulu32u32
-    movl        4(%esp), %eax
-    movl        8(%esp), %ecx
+    pushl       %ebp
+    movl        %esp, %ebp
+    movl        8(%esp), %eax
+    movl        12(%esp), %ecx
     mull        %ecx
     jno         0f
-    movl        12(%esp), %ecx
+    movl        16(%esp), %ecx
     orl         $overflow, (%ecx)
 0:
+    popl        %ebp
     ret
     funsz       mulu32u32
 
