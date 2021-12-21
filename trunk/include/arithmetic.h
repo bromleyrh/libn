@@ -35,11 +35,12 @@ extern LIBN_EXPORTED __thread int atmp;
     for (atmp = ((++aenvoff <= ASTKMAX) || astko()); \
          !abreakcur; \
          abreakcur = 0, --aenvoff) \
-        if ((abreakcur = 1) && (sigsetjmp(aenvcur, 0) != 0)) { \
-            do
+        while (!abreakcur) \
+            if ((abreakcur = 1) && (sigsetjmp(aenvcur, 0) != 0)) { \
+                do
 #define in \
-            while (0); \
-        } else
+                while (0); \
+            } else
 
 #define addou64u64(x, y) addtu64u64(x, y, aenvcur)
 #define addos64s64(x, y) addts64s64(x, y, aenvcur)
