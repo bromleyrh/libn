@@ -230,9 +230,18 @@ DEFINE_OP_WITH_TRAP(div, s32)
 int
 atrapinit()
 {
-    if (aenvoff == ASTKMAX)
-        abort();
-    ++aenvoff;
+    if (aenvoff == ASTKMAX) {
+        /* FIXME: supports the case where return, goto, or longjmp() is used to
+           directly exit a trap-in block and only non-nested trap-in blocks are
+           subsequently used, by allowing the stack to wrap around and
+           automatically invalidate old entries when next entering a first-level
+           trap-in block, but does not generally support the case where a jump
+           target is still inside a trap-in block, or nested trap-in blocks are
+           used after stack wraparound occurred */
+        aenvoff = 1;
+        memset(abreak + 1, 0, sizeof(abreak) - sizeof(abreak[0]));
+    } else
+        ++aenvoff;
 
     return 0;
 }

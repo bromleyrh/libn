@@ -31,6 +31,7 @@ static void test_mulu32u32(void);
 static void test_muls32s32(void);
 
 static void test_fn(void);
+static int trap_fn(void);
 
 static void (*const test_fns[])(void) = {
     &test_addu64u64,
@@ -297,6 +298,18 @@ test_fn()
     (void)n;
 }
 
+static int
+trap_fn()
+{
+    trap {
+        put_success();
+        return -1;
+    } in
+        test_fn();
+
+    return 0;
+}
+
 int
 main(int argc, char **argv)
 {
@@ -390,6 +403,9 @@ main(int argc, char **argv)
             test_fn();
         }
     }
+
+    for (i = 0; i < 100; i++)
+        trap_fn();
 
     return EXIT_SUCCESS;
 }
