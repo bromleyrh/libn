@@ -46,6 +46,12 @@ LIBN_5 {
     global:
         abreak;
         aenvoff;
-        astko;
         atmp;
 } LIBN_4;
+
+LIBN_7 {
+    global:
+        atrapcond;
+        atrapend;
+        atrapinit;
+} LIBN_5;

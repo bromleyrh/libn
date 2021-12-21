@@ -9,6 +9,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define u64_t uint64_t
 #define s64_t int64_t
@@ -227,10 +228,32 @@ DEFINE_OP_WITH_TRAP(div, u32)
 DEFINE_OP_WITH_TRAP(div, s32)
 
 int
-astko()
+atrapinit()
 {
-    abort();
-    return -1;
+    if (aenvoff == ASTKMAX)
+        abort();
+    ++aenvoff;
+
+    return 0;
+}
+
+int
+atrapcond(int set)
+{
+    int ret;
+
+    ret = !(abreak[aenvoff]);
+    if (set)
+        abreak[aenvoff] = 1;
+
+    return ret;
+}
+
+void
+atrapend()
+{
+    abreak[aenvoff] = 0;
+    --aenvoff;
 }
 
 /* vi: set expandtab sw=4 ts=4: */

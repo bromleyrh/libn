@@ -29,14 +29,11 @@ extern LIBN_EXPORTED __thread size_t aenvoff;
 extern LIBN_EXPORTED __thread int atmp;
 
 #define aenvcur aenv[aenvoff-1]
-#define abreakcur abreak[aenvoff]
 
 #define trap \
-    for (atmp = ((++aenvoff <= ASTKMAX) || astko()); \
-         !abreakcur; \
-         abreakcur = 0, --aenvoff) \
-        while (!abreakcur) \
-            if ((abreakcur = 1) && (sigsetjmp(aenvcur, 0) != 0)) { \
+    for (atmp = atrapinit(); atrapcond(0); atrapend()) \
+        while (atrapcond(1)) \
+            if (sigsetjmp(aenvcur, 0) != 0) { \
                 do
 #define in \
                 while (0); \
@@ -126,7 +123,9 @@ LIBN_EXPORTED int64_t divts64s64(int64_t x, int64_t y, sigjmp_buf env);
 LIBN_EXPORTED uint32_t divtu32u32(uint32_t x, uint32_t y, sigjmp_buf env);
 LIBN_EXPORTED int32_t divts32s32(int32_t x, int32_t y, sigjmp_buf env);
 
-LIBN_EXPORTED int astko(void);
+LIBN_EXPORTED int atrapinit(void);
+LIBN_EXPORTED int atrapcond(int);
+LIBN_EXPORTED void atrapend(void);
 
 #ifdef __cplusplus
 }
