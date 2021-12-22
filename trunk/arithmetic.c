@@ -228,8 +228,11 @@ DEFINE_OP_WITH_TRAP(div, u32)
 DEFINE_OP_WITH_TRAP(div, s32)
 
 int
-atrapinit()
+trapinit(void *bp, void *ip)
 {
+    (void)bp;
+    (void)ip;
+
     if (aenvoff == ASTKMAX) {
         /* FIXME: supports the case where return, goto, or longjmp() is used to
            directly exit a trap-in block and only non-nested trap-in blocks are
