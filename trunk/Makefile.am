@@ -51,7 +51,7 @@ $(pkgconfig_DATA): config.status
 noinst_HEADERS = arithmetic.S common.h common.S
 
 if ! GENERIC
-arch_sources = add.S mul.S sub.S
+arch_sources = add.S mul.S sub.S trap.S
 endif
 
 BUILT_SOURCES = version.c
