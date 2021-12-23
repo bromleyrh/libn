@@ -8,6 +8,7 @@
 #include <setjmp.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,6 +16,11 @@
 #define s64_t int64_t
 #define u32_t uint32_t
 #define s32_t int32_t
+
+struct trap_frame {
+    void    *bp;
+    int     n;
+};
 
 typedef union {
     struct {
@@ -36,6 +42,8 @@ _Thread_local sigjmp_buf aenv[ASTKMAX];
 _Thread_local int abreak[ASTKMAX+1] = {[0] = 1};
 _Thread_local size_t aenvoff;
 _Thread_local int atmp;
+
+static __thread struct trap_frame trap_stack[ASTKMAX+1];
 
 #ifdef I386
 void _addu64u64(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t *, uint32_t *,
@@ -228,23 +236,25 @@ DEFINE_OP_WITH_TRAP(div, u32)
 DEFINE_OP_WITH_TRAP(div, s32)
 
 int
-trapinit(void *bp, void *ip)
+trapinit(void *bp, int n)
 {
-    (void)bp;
-    (void)ip;
+    size_t i;
 
-    if (aenvoff == ASTKMAX) {
-        /* FIXME: supports the case where return, goto, or longjmp() is used to
-           directly exit a trap-in block and only non-nested trap-in blocks are
-           subsequently used, by allowing the stack to wrap around and
-           automatically invalidate old entries when next entering a first-level
-           trap-in block, but does not generally support the case where a jump
-           target is still inside a trap-in block, or nested trap-in blocks are
-           used after stack wraparound occurred */
-        aenvoff = 1;
-        memset(abreak + 1, 0, sizeof(abreak) - sizeof(abreak[0]));
-    } else
-        ++aenvoff;
+    fprintf(stderr, "%s(): %p, %d\n", __FUNCTION__, bp, n);
+
+    trap_stack[aenvoff].bp = bp;
+    trap_stack[aenvoff].n = n;
+    for (i = 0; (trap_stack[i].bp != bp) || (trap_stack[i].n != n); i++)
+        ;
+    if (i < aenvoff) {
+        /* supports the case where return, goto, or longjmp() is used to
+           directly exit a trap-in block */
+        fprintf(stderr, "%s(): %p, %d found at %d\n", __FUNCTION__, bp, n, i);
+        aenvoff = i;
+        memset(abreak + 1 + i, 0, sizeof(abreak) - (1+i) * sizeof(abreak[0]));
+    }
+
+    ++aenvoff;
 
     return 0;
 }
@@ -254,9 +264,14 @@ atrapcond(int set)
 {
     int ret;
 
+    fprintf(stderr, "%s(): aenvoff == %d\n", __FUNCTION__, aenvoff);
+
     ret = !abreak[aenvoff];
-    if (set)
+    fprintf(stderr, "%s(): abreak[%d] == %d\n", __FUNCTION__, aenvoff, !ret);
+    if (set) {
+        fprintf(stderr, "%s(): set abreak[%d]\n", __FUNCTION__, aenvoff);
         abreak[aenvoff] = 1;
+    }
 
     return ret;
 }
@@ -264,8 +279,11 @@ atrapcond(int set)
 void
 atrapend()
 {
+    fprintf(stderr, "%s(): reset abreak[%d]\n", __FUNCTION__, aenvoff);
     abreak[aenvoff] = 0;
     --aenvoff;
+
+    trap_stack[aenvoff].bp = NULL;
 }
 
 /* vi: set expandtab sw=4 ts=4: */

@@ -302,7 +302,7 @@ test_fn()
 static int
 trap_fn()
 {
-    trap {
+    trap (0) {
         put_success();
         return -1;
     } in
@@ -322,13 +322,13 @@ main(int argc, char **argv)
     for (i = 0; i < ARRAY_SIZE(test_fns); i++)
         (*test_fns[i])();
 
-    trap
+    trap (0)
         put_success();
     in
         test_fn();
 
     if (1)
-        trap
+        trap (0)
             if (1)
                 put_success();
         in
@@ -339,64 +339,64 @@ main(int argc, char **argv)
     if (0)
         ;
     else
-        trap
+        trap (0)
             if (1)
                 put_success();
         in
             test_fn();
 
     for (i = 0; i < 3; i++)
-        trap
+        trap (0)
             if (1)
                 put_success();
         in
             test_fn();
 
     do {
-        trap
+        trap (0)
             if (1)
                 put_success();
         in
             test_fn();
     } while (0);
 
-    trap
+    trap (0)
         put_bug();
     in {
-        trap
+        trap (1)
             put_bug();
         in
-            trap
+            trap (2)
                 put_bug();
             in {
-                trap
+                trap (3)
                     put_success();
                 in
                     test_fn();
-                trap {
+                trap (3) {
                     put_success();
-                    trap
+                    trap (4)
                         put_success();
                     in
                         test_fn();
                 } in
                     test_fn();
             }
-        trap
+        trap (1)
             put_success();
         in {
-            trap
+            trap (2)
                 put_bug();
             in {
-                trap {
+                trap (3) {
                     put_success();
-                    trap
+                    trap (4)
                         put_success();
                     in
                         test_fn();
                 } in
                     test_fn();
-                trap
+                trap (3)
                     put_success();
                 in
                     test_fn();
@@ -407,6 +407,21 @@ main(int argc, char **argv)
 
     for (i = 0; i < 100; i++)
         trap_fn();
+
+    i = 0;
+test:
+    trap (0)
+        put_success();
+    in {
+        trap (1)
+            put_success();
+        in {
+            if (i++ == 0)
+                goto test;
+            test_fn();
+        }
+        test_fn();
+    }
 
     return EXIT_SUCCESS;
 }
