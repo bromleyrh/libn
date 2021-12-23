@@ -21,7 +21,7 @@
 
 #ifdef X86_64
     defun       atrapinit
-    pushq       (%rsp)
+    pushl       8(%rsp)
     pushq       %rbp
     call        trapinit
     addq        $8, %rsp
@@ -33,7 +33,7 @@
     defun       atrapinit
     pushl       %ebp
     movl        %esp, %ebp
-    pushl       4(%esp)
+    pushl       8(%esp)
     pushl       %ebp
     call        trapinit
     addl        $8, %esp

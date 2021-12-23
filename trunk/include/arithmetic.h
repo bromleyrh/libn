@@ -30,8 +30,8 @@ extern LIBN_EXPORTED _Thread_local int atmp;
 
 #define aenvcur aenv[aenvoff-1]
 
-#define trap \
-    for (atmp = atrapinit(); atrapcond(0); atrapend()) \
+#define trap(n) \
+    for (atmp = atrapinit(n); atrapcond(0); atrapend()) \
         while (atrapcond(1)) \
             if (sigsetjmp(aenvcur, 0) != 0) { \
                 do
@@ -135,7 +135,7 @@ LIBN_EXPORTED int64_t divts64s64(int64_t x, int64_t y, sigjmp_buf env);
 LIBN_EXPORTED uint32_t divtu32u32(uint32_t x, uint32_t y, sigjmp_buf env);
 LIBN_EXPORTED int32_t divts32s32(int32_t x, int32_t y, sigjmp_buf env);
 
-LIBN_EXPORTED int atrapinit(void);
+LIBN_EXPORTED int atrapinit(int);
 LIBN_EXPORTED int atrapcond(int);
 LIBN_EXPORTED void atrapend(void);
 
