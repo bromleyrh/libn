@@ -53,5 +53,9 @@ LIBN_7 {
     global:
         atrapcond;
         atrapend;
-        atrapinit;
 } LIBN_5;
+
+LIBN_8 {
+    global:
+        atrapinit;
+} LIBN_7;
