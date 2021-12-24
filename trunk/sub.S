@@ -2,12 +2,8 @@
 # sub.S
 #
 
-    .include    "arithmetic.S"
-#ifdef __APPLE__
-    .include    "common_os_x.S"
-#else
-    .include    "common.S"
-#endif
+#include "arithmetic.S"
+#include "common.S"
 
 #ifdef X86_64
     expfun      subs64s64

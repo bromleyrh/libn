@@ -42,7 +42,7 @@ pkgconfig_DATA = libn.pc
 
 $(pkgconfig_DATA): config.status
 
-noinst_HEADERS = arithmetic.S common.S common_os_x.S
+noinst_HEADERS = arithmetic.S common.S
 
 BUILT_SOURCES = version.c
 
