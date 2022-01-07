@@ -19,7 +19,7 @@ main(int argc, char **argv)
 {
     size_t i;
 
-    static const struct {
+    static const struct ent {
         int64_t opnd1;
         int64_t opnd2;
         int64_t expected_res;
@@ -139,7 +139,8 @@ main(int argc, char **argv)
         {  -1ll * INT_MAX,              -1,   1ll * INT_MAX, 0},
         {              -2,  -1ll * INT_MAX,   2ll * INT_MAX, 0},
         {  -1ll * INT_MAX,              -2,   2ll * INT_MAX, 0}
-    }, *t;
+    };
+    const struct ent *t;
 
     (void)argc;
     (void)argv;
