@@ -7,7 +7,7 @@ check_PROGRAMS += tests/arithmetic_test tests/overflow_test
 TESTS += tests/arithmetic_test tests/overflow_test
 
 if APPLE
-test_ldflags = -rpath @abs_top_builddir@/.libs
+test_ldflags = -headerpad_max_install_names -rpath @abs_top_builddir@/.libs
 else
 test_ldflags = -no-install -rpath @abs_top_builddir@/.libs
 endif
