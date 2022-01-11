@@ -93,9 +93,11 @@ dnl FIXME: Replace with wrapper script or utility
 postlink_cmds=:
 AS_IF(
     [test x$platform = xdarwin],
-    [libpath="$(pwd | sed -e 's/\//\\\//g')\/.libs\/libn.dylib"
+    [libpath="$(pwd | sed "s/'/'\\\\\\\\\\\\\\\\\\\''/g")"
+     libpath="$(printf "$libpath" | sed -e 's/\//\\\//g')"
+     libpath="${libpath}\/.libs\/libn.dylib"
      postlink_cmds="${postlink_cmds}; scripts\/fix_up_linking_os_x.sh"
-     postlink_cmds="$postlink_cmds @OUTPUT@ $libpath"]
+     postlink_cmds="$postlink_cmds @OUTPUT@ '$libpath'"]
 )
 lt=libtool
 sed_edit_expr="s/postlink_cmds=\"\"/postlink_cmds=\"$postlink_cmds\"/"
