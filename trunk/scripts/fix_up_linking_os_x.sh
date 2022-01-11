@@ -4,7 +4,7 @@ testdir=tests
 
 get_cur_libn_path()
 {
-	otool -L "$1" | grep libn \
+	otool -L "$1" | tail -n +2 | grep libn \
 		| sed 's/ (compatibility version .*, current version .*)$//' | cut -f 2-
 }
 
