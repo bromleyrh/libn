@@ -5,7 +5,7 @@
 AC_INIT([libn], m4_esyscmd_s([cat .version]))
 AC_PREREQ([2.69])
 
-env_cflags="$CFLAGS"
+env_cflags=$CFLAGS
 
 AC_CONFIG_SRCDIR([add.S])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -73,7 +73,7 @@ AM_CONDITIONAL([DEBUG], [test $debug = true])
 
 AC_ARG_WITH([pkgconfigdir],
             [  --with-pkgconfigdir=DIR install pkg-config data in DIR],
-            [pkgconfigdir="$withval"],
+            [pkgconfigdir=$withval],
             [pkgconfigdir="$libdir/pkgconfig"])
 AC_SUBST([pkgconfigdir])
 
@@ -82,7 +82,7 @@ AC_SUBST([ln_age], [0])
 AC_SUBST([ln_rev], [0])
 
 dnl FIXME: Later, only prevent Autoconf from adding "-g -O2" to CFLAGS
-CFLAGS="$env_cflags"
+CFLAGS=$env_cflags
 
 AC_CONFIG_FILES([Makefile include/Makefile libn.pc])
 AC_CONFIG_HEADERS([config.h])
