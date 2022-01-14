@@ -30,8 +30,8 @@ AS_CASE(
             [arch=x86_64],
         [AC_MSG_ERROR([unsupported platform], [1])]
 )
-AM_CONDITIONAL([I386], [test "x$arch" = "xi386"])
-AM_CONDITIONAL([X86_64], [test "x$arch" = "xx86_64"])
+AM_CONDITIONAL([I386], [test $arch = "i386"])
+AM_CONDITIONAL([X86_64], [test $arch = "x86_64"])
 
 AS_CASE(
     [$target_os],
@@ -43,9 +43,9 @@ AS_CASE(
             [platform=linux],
         [AC_MSG_ERROR([unsupported platform], [1])]
 )
-AM_CONDITIONAL([APPLE], [test "x$platform" = "xdarwin"])
-AM_CONDITIONAL([FREEBSD], [test "x$platform" = "xfreebsd"])
-AM_CONDITIONAL([LINUX], [test "x$platform" = "xlinux"])
+AM_CONDITIONAL([APPLE], [test $platform = "darwin"])
+AM_CONDITIONAL([FREEBSD], [test $platform = "freebsd"])
+AM_CONDITIONAL([LINUX], [test $platform = "linux"])
 
 AM_PROG_AS
 AC_PROG_CC
@@ -69,7 +69,7 @@ AC_ARG_ENABLE([debugging],
                )
               ],
               [debug=false])
-AM_CONDITIONAL([DEBUG], [test x$debug = xtrue])
+AM_CONDITIONAL([DEBUG], [test $debug = true])
 
 AC_ARG_WITH([pkgconfigdir],
             [  --with-pkgconfigdir=DIR install pkg-config data in DIR],
@@ -93,7 +93,7 @@ dnl reducing the needed time to run the commands
 dnl FIXME: Replace with wrapper script or utility
 postlink_cmds=:
 AS_IF(
-    [test x$platform = xdarwin],
+    [test $platform = darwin],
     [libpath="$(pwd | sed "s/'/'\\\\\\\\\\\\\\\\\\\''/g")"
      libpath="$(printf "$libpath" | sed -e 's/\//\\\//g')"
      libpath="${libpath}\/.libs\/libn.dylib"
