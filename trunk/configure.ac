@@ -22,27 +22,27 @@ AM_INIT_AUTOMAKE([foreign no-define subdir-objects])
 AM_SILENT_RULES([yes])
 LT_INIT([disable-static])
 
-case $target_cpu in
-    i386|i486|i586|i686)
-        arch=i386;;
-    x86_64)
-        arch=x86_64;;
-    *)
-        AC_MSG_ERROR([unsupported platform], [1]);;
-esac
+AS_CASE(
+    [$target_cpu],
+        [i386|i486|i586|i686],
+            [arch=i386],
+        [x86_64],
+            [arch=x86_64],
+        [AC_MSG_ERROR([unsupported platform], [1])]
+)
 AM_CONDITIONAL([I386], [test "x$arch" = "xi386"])
 AM_CONDITIONAL([X86_64], [test "x$arch" = "xx86_64"])
 
-case $target_os in
-    *darwin*)
-        platform=darwin;;
-    *freebsd*)
-        platform=freebsd;;
-    *linux*)
-        platform=linux;;
-    *)
-        AC_MSG_ERROR([unsupported platform], [1]);;
-esac
+AS_CASE(
+    [$target_os],
+        [*darwin*],
+            [platform=darwin],
+        [*freebsd*],
+            [platform=freebsd],
+        [*linux*],
+            [platform=linux],
+        [AC_MSG_ERROR([unsupported platform], [1])]
+)
 AM_CONDITIONAL([APPLE], [test "x$platform" = "xdarwin"])
 AM_CONDITIONAL([FREEBSD], [test "x$platform" = "xfreebsd"])
 AM_CONDITIONAL([LINUX], [test "x$platform" = "xlinux"])
@@ -59,14 +59,15 @@ AX_LD_VERSION_SCRIPT
 
 AC_ARG_ENABLE([debugging],
               [  --enable-debugging      enable debugging],
-              [case "$enableval" in
-                   yes)
-                       debug=true;;
-                   no)
-                       debug=false;;
-                   *)
-                       AC_MSG_ERROR([invalid "--enable-debugging" argument]);;
-               esac],
+              [AS_CASE(
+                  [$enableval],
+                      [yes],
+                          [debug=true],
+                      [no],
+                          [debug=false],
+                      [AC_MSG_ERROR([invalid "--enable-debugging" argument])]
+               )
+              ],
               [debug=false])
 AM_CONDITIONAL([DEBUG], [test x$debug = xtrue])
 
