@@ -93,7 +93,7 @@ dnl reducing the needed time to run the commands
 dnl FIXME: Replace with wrapper script or utility
 postlink_cmds=:
 AS_IF(
-    [test $platform = darwin],
+    [test $platform = "darwin"],
     [libpath="$(pwd | sed "s/'/'\\\\\\\\\\\\\\\\\\\''/g")"
      libpath="$(printf "$libpath" | sed -e 's/\//\\\//g')"
      libpath="${libpath}\/.libs\/libn.dylib"
