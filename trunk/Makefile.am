@@ -52,8 +52,8 @@ build_date_str = "build_date=$(build_date)"
 build_vers_str = "build_git_commit_id=$(build_vers)"
 
 version.c:
-	echo "const char build_date[] = \"$(build_date_str)\";" >| $@
-	echo "const char build_git_commit_id[] = \"$(build_vers_str)\";" >> $@
+	echo "const char build_date[] = \"$(build_date_str)\";" >|$@
+	echo "const char build_git_commit_id[] = \"$(build_vers_str)\";" >>$@
 
 lib_LTLIBRARIES = libn.la
 
