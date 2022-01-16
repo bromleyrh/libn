@@ -76,7 +76,7 @@ include tests/Makefile.am
 
 install-exec-hook:
 	@if ldc=`which ldconfig 2>/dev/null` && test -x "${ldc}"; then \
-		echo "Regenerating runtime linker cache"; \
+		echo "Regenerating runtime linker cache" >&2; \
 		ldconfig || true; \
 	fi
 	@echo
