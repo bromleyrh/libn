@@ -39,6 +39,18 @@ extern LIBN_EXPORTED __thread int atmp;
                 while (0); \
             } else
 
+#if __WORDSIZE__ == 32
+#define adduzuz(x, y, overflow) addu64u64(x, y, overflow)
+#define subuzuz(x, y, overflow) subu64u64(x, y, overflow)
+#define muluzuz(x, y, overflow) mulu64u64(x, y, overflow)
+#define divuzuz(x, y, diverr) divu64u64(x, y, diverr)
+#else
+#define adduzuz(x, y, overflow) addu32u32(x, y, overflow)
+#define subuzuz(x, y, overflow) subu32u32(x, y, overflow)
+#define muluzuz(x, y, overflow) mulu32u32(x, y, overflow)
+#define divuzuz(x, y, diverr) divu32u32(x, y, diverr)
+#endif
+
 #define addou64u64(x, y) addtu64u64(x, y, aenvcur)
 #define addos64s64(x, y) addts64s64(x, y, aenvcur)
 
