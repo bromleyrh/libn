@@ -40,15 +40,15 @@ extern LIBN_EXPORTED __thread int atmp;
             } else
 
 #if __WORDSIZE__ == 32
-#define adduzuz(x, y, overflow) addu64u64(x, y, overflow)
-#define subuzuz(x, y, overflow) subu64u64(x, y, overflow)
-#define muluzuz(x, y, overflow) mulu64u64(x, y, overflow)
-#define divuzuz(x, y, diverr) divu64u64(x, y, diverr)
+#define adduzuz addu64u64
+#define subuzuz subu64u64
+#define muluzuz mulu64u64
+#define divuzuz divu64u64
 #else
-#define adduzuz(x, y, overflow) addu32u32(x, y, overflow)
-#define subuzuz(x, y, overflow) subu32u32(x, y, overflow)
-#define muluzuz(x, y, overflow) mulu32u32(x, y, overflow)
-#define divuzuz(x, y, diverr) divu32u32(x, y, diverr)
+#define adduzuz addu32u32
+#define subuzuz subu32u32
+#define muluzuz mulu32u32
+#define divuzuz divu32u32
 #endif
 
 #define addou64u64(x, y) addtu64u64(x, y, aenvcur)
@@ -76,15 +76,15 @@ extern LIBN_EXPORTED __thread int atmp;
 #define divzs32s32(x, y) divts32s32(x, y, aenvcur)
 
 #if __WORDSIZE__ == 64
-#define addouzuz(x, y) addou64u64(x, y)
-#define subouzuz(x, y) subou64u64(x, y)
-#define mulouzuz(x, y) mulou64u64(x, y)
-#define divzuzuz(x, y) divzu64u64(x, y)
+#define addouzuz addou64u64
+#define subouzuz subou64u64
+#define mulouzuz mulou64u64
+#define divzuzuz divzu64u64
 #else
-#define addouzuz(x, y) addou32u32(x, y)
-#define subouzuz(x, y) subou32u32(x, y)
-#define mulouzuz(x, y) mulou32u32(x, y)
-#define divzuzuz(x, y) divzu32u32(x, y)
+#define addouzuz addou32u32
+#define subouzuz subou32u32
+#define mulouzuz mulou32u32
+#define divzuzuz divzu32u32
 #endif
 
 LIBN_EXPORTED uint64_t addu64u64(uint64_t x, uint64_t y, int *overflow);
