@@ -23,7 +23,7 @@
     movq        %rdi, %rax
     addq        %rsi, %rax
     jno         0f
-    orl         $overflow, (%rdx)
+    orl         $aoverflow, (%rdx)
 0:
     ret
     funsz       adds64s64
@@ -32,7 +32,7 @@
     movq        %rdi, %rax
     addq        %rsi, %rax
     jnc         0f
-    orl         $overflow, (%rdx)
+    orl         $aoverflow, (%rdx)
 0:
     ret
     funsz       addu64u64
@@ -41,7 +41,7 @@
     movl        %edi, %eax
     addl        %esi, %eax
     jno         0f
-    orl         $overflow, (%rdx)
+    orl         $aoverflow, (%rdx)
 0:
     ret
     funsz       adds32s32
@@ -50,7 +50,7 @@
     movl        %edi, %eax
     addl        %esi, %eax
     jnc         0f
-    orl         $overflow, (%rdx)
+    orl         $aoverflow, (%rdx)
 0:
     ret
     funsz       addu32u32
@@ -71,7 +71,7 @@
     movl        %eax, (%edx)
     jno         0f
     movl        32(%esp), %edx
-    orl         $overflow, (%edx)
+    orl         $aoverflow, (%edx)
 0:
     popl        %ebp
     ret
@@ -91,7 +91,7 @@
     movl        %eax, (%edx)
     jnc         0f
     movl        32(%esp), %edx
-    orl         $overflow, (%edx)
+    orl         $aoverflow, (%edx)
 0:
     popl        %ebp
     ret
@@ -104,7 +104,7 @@
     addl        %ecx, %eax
     jno         0f
     movl        16(%esp), %edx
-    orl         $overflow, (%edx)
+    orl         $aoverflow, (%edx)
 0:
     popl        %ebp
     ret
@@ -118,7 +118,7 @@
     addl        %ecx, %eax
     jnc         0f
     movl        16(%esp), %edx
-    orl         $overflow, (%edx)
+    orl         $aoverflow, (%edx)
 0:
     popl        %ebp
     ret

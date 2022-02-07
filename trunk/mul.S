@@ -23,7 +23,7 @@
     movq        %rdi, %rax
     imulq       %rsi, %rax
     jno         0f
-    orl         $overflow, (%rdx)
+    orl         $aoverflow, (%rdx)
 0:
     ret
     funsz       muls64s64
@@ -33,7 +33,7 @@
     movq        %rdi, %rax
     mulq        %rsi
     jno         0f
-    orl         $overflow, (%rcx)
+    orl         $aoverflow, (%rcx)
 0:
     ret
     funsz       mulu64u64
@@ -42,7 +42,7 @@
     movl        %edi, %eax
     imull       %esi, %eax
     jno         0f
-    orl         $overflow, (%rdx)
+    orl         $aoverflow, (%rdx)
 0:
     ret
     funsz       muls32s32
@@ -52,7 +52,7 @@
     movl        %edi, %eax
     mull        %esi
     jno         0f
-    orl         $overflow, (%rcx)
+    orl         $aoverflow, (%rcx)
 0:
     ret
     funsz       mulu32u32
@@ -222,7 +222,7 @@
     popl        %edx
 3:
     movl        32(%esp), %edx
-    orl         $overflow, (%edx)
+    orl         $aoverflow, (%edx)
     popl        %ebp
     ret
 
@@ -260,7 +260,7 @@
     ret
 2:
     movl        32(%esp), %edx
-    orl         $overflow, (%edx)
+    orl         $aoverflow, (%edx)
     popl        %ebp
     ret
 
@@ -272,7 +272,7 @@
     imull       %ecx, %eax
     jno         0f
     movl        16(%esp), %edx
-    orl         $overflow, (%edx)
+    orl         $aoverflow, (%edx)
 0:
     popl        %ebp
     ret
@@ -286,7 +286,7 @@
     mull        %ecx
     jno         0f
     movl        16(%esp), %ecx
-    orl         $overflow, (%ecx)
+    orl         $aoverflow, (%ecx)
 0:
     popl        %ebp
     ret

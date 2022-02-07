@@ -18,8 +18,8 @@
 extern "C" {
 #endif
 
-#define OVERFLOW 1
-#define DIVERR 2
+#define AOVERFLOW 1
+#define ADIVERR 2
 
 #define ASTKMAX 16
 

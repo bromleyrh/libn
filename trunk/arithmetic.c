@@ -167,7 +167,7 @@ uint64_t
 divu64u64(uint64_t x, uint64_t y, int *diverr)
 {
     if (y == 0) {
-        *diverr |= DIVERR;
+        *diverr |= ADIVERR;
         return UINT64_MAX;
     }
 
@@ -178,7 +178,7 @@ int64_t
 divs64s64(int64_t x, int64_t y, int *diverr)
 {
     if (y == 0) {
-        *diverr |= DIVERR;
+        *diverr |= ADIVERR;
         return INT64_MAX;
     }
 
@@ -189,7 +189,7 @@ uint32_t
 divu32u32(uint32_t x, uint32_t y, int *diverr)
 {
     if (y == 0) {
-        *diverr |= DIVERR;
+        *diverr |= ADIVERR;
         return UINT32_MAX;
     }
 
@@ -200,7 +200,7 @@ int32_t
 divs32s32(int32_t x, int32_t y, int *diverr)
 {
     if (y == 0) {
-        *diverr |= DIVERR;
+        *diverr |= ADIVERR;
         return INT32_MAX;
     }
 
