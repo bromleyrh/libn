@@ -63,7 +63,7 @@ if LD_VERSION_SCRIPT
 version_script = -Wl,--version-script=libn.map
 endif
 
-libn_la_SOURCES = add.S arithmetic.c mul.S sub.S
+libn_la_SOURCES = add.S arithmetic.c mul.S sub.S version.c
 libn_la_CPPFLAGS = $(AM_CPPFLAGS) -Iinclude
 libn_la_CFLAGS = $(AM_CFLAGS)
 libn_la_LDFLAGS = -version-info @ln_cur@:@ln_rev@:@ln_age@ $(version_script)
