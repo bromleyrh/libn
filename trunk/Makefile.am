@@ -44,6 +44,10 @@ $(pkgconfig_DATA): config.status
 
 noinst_HEADERS = arithmetic.S common.S
 
+if ! GENERIC
+arch_sources = add.S mul.S sub.S
+endif
+
 BUILT_SOURCES = version.c
 
 CLEANFILES = version.c
@@ -63,10 +67,12 @@ if LD_VERSION_SCRIPT
 version_script = -Wl,--version-script=libn.map
 endif
 
-libn_la_SOURCES = add.S arithmetic.c mul.S sub.S version.c
+libn_la_SOURCES = $(arch_sources) arithmetic.c version.c
 libn_la_CPPFLAGS = $(AM_CPPFLAGS) -Iinclude
 libn_la_CFLAGS = $(AM_CFLAGS)
 libn_la_LDFLAGS = -version-info @ln_cur@:@ln_rev@:@ln_age@ $(version_script)
+
+include generic/Makefile.am
 
 check_PROGRAMS =
 TESTS =

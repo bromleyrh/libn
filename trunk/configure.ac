@@ -28,10 +28,11 @@ AS_CASE(
             [arch=i386],
         [x86_64],
             [arch=x86_64],
-        [AC_MSG_ERROR([unsupported platform], [1])]
+        [arch=generic]
 )
 AM_CONDITIONAL([I386], [test $arch = "i386"])
 AM_CONDITIONAL([X86_64], [test $arch = "x86_64"])
+AM_CONDITIONAL([GENERIC], [test $arch = "generic"])
 
 AS_CASE(
     [$target_os],
