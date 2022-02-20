@@ -3,6 +3,7 @@
  */
 
 #include "arithmetic.h"
+#include "common.h"
 
 #include <inttypes.h>
 #include <limits.h>
@@ -154,26 +155,24 @@ main(int argc, char **argv)
         overflow = 0;
         res = muls64s64(t->opnd1, t->opnd2, &overflow);
         if (overflow != t->expected_overflow) {
-            fprintf(stderr,
-                    "Incorrect overflow status %d (expected %d)\n",
+            errmsgf("Incorrect overflow status %d (expected %d)\n",
                     overflow, t->expected_overflow);
             return EXIT_FAILURE;
         }
         if (!overflow && (res != t->expected_res)) {
-            fprintf(stderr,
-                    "Incorrect result %" PRIi64 " (expected %" PRIi64 ")\n",
+            errmsgf("Incorrect result %" PRIi64 " (expected %" PRIi64 ")\n",
                     res, t->expected_res);
             return EXIT_FAILURE;
         }
 
-        fprintf(stderr, "Test %zu: ", i + 1);
+        infomsgf("Test %zu: ", i + 1);
         if (overflow)
-            fputs("Overflow", stderr);
+            infomsg("Overflow");
         else {
-            fprintf(stderr, "%" PRIi64 " * %" PRIi64 " == %" PRIi64,
-                    t->opnd1, t->opnd2, res);
+            infomsgf("%" PRIi64 " * %" PRIi64 " == %" PRIi64,
+                     t->opnd1, t->opnd2, res);
         }
-        fputc('\n', stderr);
+        infochr('\n');
     }
 
     return EXIT_SUCCESS;
