@@ -42,7 +42,7 @@ pkgconfig_DATA = libn.pc
 
 $(pkgconfig_DATA): config.status
 
-noinst_HEADERS = arithmetic.S common.S
+noinst_HEADERS = arithmetic.S common.h common.S
 
 if ! GENERIC
 arch_sources = add.S mul.S sub.S
