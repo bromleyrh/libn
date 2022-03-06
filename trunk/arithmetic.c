@@ -251,7 +251,7 @@ atrapcond(int set)
 {
     int ret;
 
-    ret = !(abreak[aenvoff]);
+    ret = !abreak[aenvoff];
     if (set)
         abreak[aenvoff] = 1;
 
