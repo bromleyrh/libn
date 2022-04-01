@@ -159,7 +159,7 @@ main(int argc, char **argv)
                     overflow, t->expected_overflow);
             return EXIT_FAILURE;
         }
-        if (!overflow && (res != t->expected_res)) {
+        if (!overflow && res != t->expected_res) {
             errmsgf("Incorrect result %" PRIi64 " (expected %" PRIi64 ")\n",
                     res, t->expected_res);
             return EXIT_FAILURE;

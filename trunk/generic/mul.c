@@ -32,7 +32,7 @@ muls64s64(int64_t x, int64_t y, int *overflow)
             goto no_overflow;
         else if (x >= INT64_MIN / y)
             goto no_overflow;
-    } else if ((x == 0) || (y == 0))
+    } else if (x == 0 || y == 0)
         goto no_overflow;
     else if (y <= INT64_MAX / x)
         goto no_overflow;
@@ -68,7 +68,7 @@ muls32s32(int32_t x, int32_t y, int *overflow)
             goto no_overflow;
         else if (x >= INT32_MIN / y)
             goto no_overflow;
-    } else if ((x == 0) || (y == 0))
+    } else if (x == 0 || y == 0)
         goto no_overflow;
     else if (y <= INT32_MAX / x)
         goto no_overflow;
