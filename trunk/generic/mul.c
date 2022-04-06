@@ -10,7 +10,7 @@
 uint64_t
 mulu64u64(uint64_t x, uint64_t y, int *overflow)
 {
-    if (y > UINT64_MAX / x)
+    if (x != 0 && y > UINT64_MAX / x)
         *overflow |= 1;
 
     return x * y;
@@ -46,7 +46,7 @@ no_overflow:
 uint32_t
 mulu32u32(uint32_t x, uint32_t y, int *overflow)
 {
-    if (y > UINT32_MAX / x)
+    if (x != 0 && y > UINT32_MAX / x)
         *overflow |= 1;
 
     return x * y;
