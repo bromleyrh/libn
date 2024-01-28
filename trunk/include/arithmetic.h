@@ -23,10 +23,10 @@ extern "C" {
 
 #define ASTKMAX 16
 
-extern LIBN_EXPORTED __thread sigjmp_buf aenv[ASTKMAX];
-extern LIBN_EXPORTED __thread int abreak[ASTKMAX+1];
-extern LIBN_EXPORTED __thread size_t aenvoff;
-extern LIBN_EXPORTED __thread int atmp;
+extern LIBN_EXPORTED _Thread_local sigjmp_buf aenv[ASTKMAX];
+extern LIBN_EXPORTED _Thread_local int abreak[ASTKMAX+1];
+extern LIBN_EXPORTED _Thread_local size_t aenvoff;
+extern LIBN_EXPORTED _Thread_local int atmp;
 
 #define aenvcur aenv[aenvoff-1]
 

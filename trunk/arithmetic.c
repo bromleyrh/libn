@@ -32,10 +32,10 @@ typedef union {
     int64_t emul;
 } cint64_t;
 
-__thread sigjmp_buf aenv[ASTKMAX];
-__thread int abreak[ASTKMAX+1] = {[0] = 1};
-__thread size_t aenvoff;
-__thread int atmp;
+_Thread_local sigjmp_buf aenv[ASTKMAX];
+_Thread_local int abreak[ASTKMAX+1] = {[0] = 1};
+_Thread_local size_t aenvoff;
+_Thread_local int atmp;
 
 #ifdef I386
 void _addu64u64(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t *, uint32_t *,
