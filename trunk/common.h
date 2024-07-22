@@ -9,7 +9,7 @@
 
 #define stderrchr(c) fputc(c, stderr)
 #define stderrmsg(msg) fputs(msg, stderr)
-#define stderrmsgf(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
+#define stderrmsgf(...) fprintf(stderr, __VA_ARGS__)
 
 #define infochr stderrchr
 #define infomsg stderrmsg
