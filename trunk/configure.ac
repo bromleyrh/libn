@@ -96,7 +96,7 @@ postlink_cmds=:
 AS_IF(
     [test $platform = "darwin"],
     [libpath="$(pwd | sed "s/'/'\\\\\\\\\\\\\\\\\\\''/g")"
-     libpath="$(printf "$libpath" | sed -e 's/\//\\\//g')"
+     libpath="$(printf "$libpath" | sed -e 's#/#\\/#g')"
      libpath="${libpath}\/.libs\/libn.dylib"
      postlink_cmds="${postlink_cmds}; scripts\/fix_up_linking_os_x.sh"
      postlink_cmds="$postlink_cmds @OUTPUT@ '$libpath'"]
