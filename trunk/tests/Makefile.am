@@ -2,6 +2,8 @@
 ## Makefile.am
 ##
 
+EXTRA_DIST += tests/test_wrapper.sh
+
 check_PROGRAMS += tests/arithmetic_test tests/overflow_test
 
 LOG_DRIVER = tests/test_wrapper.sh
