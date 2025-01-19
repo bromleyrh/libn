@@ -22,9 +22,10 @@ endif
 debug_cppflags_debug =
 debug_cflags_debug = -ggdb3 -O0
 
+std_cppflags = -D_XOPEN_SOURCE=700
 std_cflags = @std_flags@
 
-AM_CPPFLAGS = $(defines)
+AM_CPPFLAGS = $(defines) $(std_cppflags)
 AM_CFLAGS = $(std_cflags) -pipe -Wall -Wextra
 
 if DEBUG
