@@ -17,6 +17,7 @@ add_to_args()
 }
 
 set -eu
+set -o pipefail
 
 if [ "${TESTS_SKIP:-}" = 1 ]; then
 	args=
