@@ -13,7 +13,7 @@ replace_path()
 	install_name_tool -change "$@"
 }
 
-set -e
+set -eu
 set -o pipefail
 
 case $1 in
