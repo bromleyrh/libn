@@ -13,6 +13,9 @@ replace_path()
 	install_name_tool -change "$@"
 }
 
+set -e
+set -o pipefail
+
 case $1 in
 	"${testdir}"*)
 		curpath=$(get_cur_libn_path "$1")
