@@ -26,8 +26,7 @@ if [ "${TESTS_SKIP:-}" = 1 ]; then
 		n=$#
 		while true; do
 			add_to_args "$1"
-			i=$((i+1))
-			test $i -eq $n && break
+			test $((++i)) -eq $n && break
 			shift
 		done
 	fi
